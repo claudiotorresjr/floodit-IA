@@ -1,16 +1,17 @@
 #ifndef _MAIN_H
 #define _MAIN_H
 
-typedef struct MapInfo
+typedef struct Map
 {
-    char **map_grid;
+    int **map;
     int rows;
     int cols;
     int colors;
-} MapInfo;
+} Map;
 
 int **createMatrix(int rows, int cols);
-void showMatrix(char **matrix, int rows, int cols);
-MapInfo *createMap(FILE *file);
+void showMatrix(int **matrix, int rows, int cols);
+Map *createMap(FILE *file);
+void paintOneColor(Map **m, int lin, int col, int init_c, int color);
 
 #endif
