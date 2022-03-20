@@ -14,34 +14,27 @@ int **allocateMatrix(int rows, int cols)
     return matrix;
 }
 
-State *create_state(Map *m)
+State *create_state(int color)
 {
     State *new = (State *)malloc(sizeof(State));
-    new->map = (Map *)malloc(sizeof(Map));
-    new->map->map = allocateMatrix(m->rows, m->cols);
-    new->map->rows = m->rows;
-    new->map->cols = m->cols;
-    new->map->n_colors = m->n_colors;
-    new->prev = NULL;
-
-    for (int i = 0; i < 100; i++)
-    {
-        new->moves[i] = -1;
-    }
-    
+    new->color = color;
+    new->prev = NULL;    
 
     return new;
 }
 
-void copy_matrix(Map *m1, Map *m2)
+int **copy_matrix(Map *m)
 {
-    for (int i = 0; i < m1->rows; ++i)
+    int **matrix = allocateMatrix(m->rows, m->cols);
+    for (int i = 0; i < m->rows; ++i)
     {
-        for (int j = 0; j <  m1->cols; ++j)
+        for (int j = 0; j <  m->cols; ++j)
         {
-            m1->map[i][j] = m2->map[i][j];
+            matrix[i][j] = m->map[i][j];
         }
     }
+
+    return matrix;
 }
 
 void push(StateQueue *queue, State *s)
@@ -67,15 +60,7 @@ State *pop(StateQueue *queue)
     State *aux = queue->top;
     queue->top = queue->top->prev;
 
-    State *r = create_state(aux->map);
-
-    copy_matrix(r->map, aux->map);
-    for (int i = 0; i < 10; i++)
-    {
-        r->moves[i] = aux->moves[i];
-    }
-
-    r->distance = aux->distance;
+    State *r = create_state(aux->color);
 
     free(aux);
 

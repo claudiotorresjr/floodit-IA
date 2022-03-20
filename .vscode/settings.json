@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "map": "c",
-        "stdlib.h": "c"
+        "stdlib.h": "c",
+        "algorithm": "c"
     }
 }

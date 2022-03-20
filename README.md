@@ -1,8 +1,10 @@
-* Para compilar
+* Para compilar, va no diretorio da versao e:
 
     ```gcc main.c stack.c -o main```
 
-# Nao testar com o geramapa ou teu Pc explode! Testa com o mapa 3_5_3.txt :D
+# Nao testar o v1_bomba com o geramapa ou teu Pc explode! Testa com o mapa 3_5_3.txt :D
+
+## O v2_guloso ta funcionando normal. Nao chega a ser guloso, mas ele pinta com a cor que mais pintou quadrinho
 
 * Como testar:
 

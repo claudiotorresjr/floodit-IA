@@ -8,7 +8,7 @@
 Map *createMap(FILE *file)
 {
     Map *map = (Map *)malloc(sizeof(Map));
-    fscanf(file, "%d %d %d\n", &map->rows, &map->cols, &map->colors);
+    fscanf(file, "%d %d %d\n", &map->rows, &map->cols, &map->n_colors);
     map->map = allocateMatrix(map->rows, map->cols);
 
     for (int i = 0; i < map->rows; i++)
@@ -139,7 +139,7 @@ int main(int argc, char const *argv[])
         State *current = pop(queue);
 
         int current_c = current->map->map[0][0];
-        for (int i = 1; i <= map->colors; ++i)
+        for (int i = 1; i <= map->n_colors; ++i)
         {
             if (i == current_c)
             {
@@ -151,7 +151,7 @@ int main(int argc, char const *argv[])
 
             update_moves(next->moves, current->moves, i);
 
-            printf("pintando com a cor %d\n", i);
+            // printf("pintando com a cor %d\n", i);
             paintOneColor(&next->map, 0, 0, next->map->map[0][0], i);
             if (isSolved(next->map))
             {
@@ -159,8 +159,8 @@ int main(int argc, char const *argv[])
                 print_moves(next->moves);
                 return 0;
             }
-            showMatrix(next->map->map, next->map->rows, next->map->cols);
-            sleep(1);
+            // showMatrix(next->map->map, next->map->rows, next->map->cols);
+            // sleep(1);
 
             push(queue, next);
         }
