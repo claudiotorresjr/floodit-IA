@@ -5,6 +5,8 @@
 #include "main.h"
 #include "stack.h"
 
+int total;
+
 Map *createMap(FILE *file)
 {
     Map *map = (Map *)malloc(sizeof(Map));
@@ -93,6 +95,22 @@ int count_color_region(int **m, int rows, int cols)
     return total;
 }
 
+void fronteira(int ***m, int rows, int cols, int l, int c, int fundo)
+{
+    if ((*m)[l][c] == fundo)
+    {
+        total++;
+        if ( rows - 1 > l )
+            fronteira(m, rows, cols, l + 1, c, fundo);
+        if ( cols - 1 > c )
+            fronteira(m, rows, cols, l, c + 1, fundo);
+        if ( l > 0 )
+            fronteira(m, rows, cols, l - 1, c, fundo);
+        if ( c > 0 )
+            fronteira(m, rows, cols, l, c - 1, fundo);
+    }
+}
+
 void print_solution(Solution *s)
 {
     printf("%d\n", s->steps);
@@ -120,7 +138,7 @@ int main(int argc, char const *argv[])
     solution->steps = 0;
     solution->colors = (int *)malloc(map->rows*map->cols*sizeof(int));
 
-    StateQueue *queue = (StateQueue *)malloc(sizeof(StateQueue));
+    PositionQueue *queue = (PositionQueue *)malloc(sizeof(PositionQueue));
     queue->top = NULL;
 
     State *new = create_state(map->map[0][0]);
@@ -137,14 +155,12 @@ int main(int argc, char const *argv[])
         {
             if (i == current_c)
             {
-                // printf("Nao pinte com a cor %d\n", i);
-                continue;
+                // printf("Nao pinte com a cor %paintOneColor
             }
-            frontier[f_pos] = create_state(i);
-
-            // printf("pintando com a cor %d\n", i);
             int **m_aux = copy_matrix(map);
+            total = 0;
             paintOneColor(&m_aux, map->rows, map->cols, 0, 0, m_aux[0][0], i);
+            fronteira(&m_aux, map->rows, map->cols, 0, 0, m_aux[0][0]);
             if (isSolved(m_aux, map->rows, map->cols))
             {
                 solution->colors[solution->steps++] = i;
@@ -152,7 +168,8 @@ int main(int argc, char const *argv[])
 
                 return 0;
             }
-            frontier[f_pos]->distance = count_color_region(m_aux, map->rows, map->cols);
+            // frontier[f_pos]->distance = count_color_region(m_aux, map->rows, map->cols);
+            frontier[f_pos]->distance = total;
             
             f_pos++;
         }

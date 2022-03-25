@@ -6,22 +6,23 @@
 
 #include "main.h"
 
-typedef struct State
+typedef struct Position
 {
-    int color;
-    int distance;
-    struct State *prev;
-} State;
+    int l;
+    int c;
+    int v;
+    struct Position *prev;
+} Position;
 
 typedef struct PositionQueue
 {
-    struct State *top;
+    int size;
+    struct Position *top;
 } PositionQueue;
 
 int **allocateMatrix(int rows, int cols);
-State *create_state(int color);
 int **copy_matrix(Map *m);
-void push(PositionQueue *queue, State *s);
-State *pop(PositionQueue *queue);
+void push(PositionQueue *queue, Position *s);
+Position *pop(PositionQueue *queue);
 
 #endif

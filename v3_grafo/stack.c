@@ -14,15 +14,6 @@ int **allocateMatrix(int rows, int cols)
     return matrix;
 }
 
-State *create_state(int color)
-{
-    State *new = (State *)malloc(sizeof(State));
-    new->color = color;
-    new->prev = NULL;    
-
-    return new;
-}
-
 int **copy_matrix(Map *m)
 {
     int **matrix = allocateMatrix(m->rows, m->cols);
@@ -37,30 +28,32 @@ int **copy_matrix(Map *m)
     return matrix;
 }
 
-void push(PositionQueue *queue, State *s)
+void push(PositionQueue *queue, Position *s)
 {    
     if(!queue->top)
     {
         s->prev = NULL;
+        queue->size = 1;
     }
     else
     {
         s->prev = queue->top;
+        queue->size++;
     }
     queue->top = s;
 }
 
-State *pop(PositionQueue *queue)
+Position *pop(PositionQueue *queue)
 {
     if (!queue->top)
     {
         return NULL;
     }
 
-    State *aux = queue->top;
+    Position *aux = queue->top;
     queue->top = queue->top->prev;
 
-    State *r = create_state(aux->color);
+    Position *r = NULL;
 
     free(aux);
 
