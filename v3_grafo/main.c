@@ -139,9 +139,6 @@ void fronteira(Map **m, int l, int c, int fundo, PositionQueue *ngb_queue)
 
 void find_regions(Graph *g, PositionQueue *queue, int size_a, int r, int c, Map *m)
 {
-    PositionQueue *p = (PositionQueue *)malloc(sizeof(PositionQueue));
-
-    Position *aux = queue->top;
     int a[2];
     a[0] = r;
     a[1] = c;
@@ -149,6 +146,8 @@ void find_regions(Graph *g, PositionQueue *queue, int size_a, int r, int c, Map 
 
     int b[2];
     int color_b;
+
+    Position *aux = queue->top;
     while (aux)
     {
         total = 0;
@@ -187,31 +186,34 @@ int main(int argc, char const *argv[])
     PositionQueue *queue = (PositionQueue *)malloc(sizeof(PositionQueue));
     queue->top = NULL;
 
+    Graph *g = create_graph(map->rows*map->cols);
+
     //acha a fronteira da posicao 0,0
     total = 0;
     fronteira(&map, 0, 0, map->map[0][0], queue);
-
-
-    //-----------------------------------------------------------------------------
-    //-----------------------------------------------------------------------------
-
-    Graph *g = create_graph(map->rows*map->cols);
-    //regioes da fronteira anterior
+    //regioes da fronteira
     find_regions(g, queue, total, 0, 0, map);
 
-    Position *aux = queue->top;
-    int a[2] = {0, 0};
-    int color_a = module(map->map[0][0]);
+    for (int i = 0; i < g->num_v; ++i)
+    {
+    
+        Vertice *aux = g->array[i].head;
+        int r, c;
+        while(aux != NULL)
+        {
+            total = 0;
+            r = aux->pos[0];
+            c = aux->pos[1];
+            
+            PositionQueue *queue = (PositionQueue *)malloc(sizeof(PositionQueue));
+            queue->top = NULL;
 
-    // int b[2];
-    // while (aux)
-    // {
-    //     b[0] = aux->l;
-    //     b[1] = aux->c;
-    //     add_edge(g, a, color_a, queue->size, b, 0, 0);
-    //     aux = aux->prev;
-    // }
-    // printf("\n");
+            fronteira(&map, r, c, map->map[r][c], queue);
+            find_regions(g, queue, total, r, c, map);
+        
+            aux = aux->next;
+        }
+    }
 
     printf("---- lista adj----\n");
     printf("---- (x, y) - [color, color_count]----\n");
