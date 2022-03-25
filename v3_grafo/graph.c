@@ -92,39 +92,41 @@ void add_edge(Graph *g, int a[2], int color_a, int size_a, int b[2], int color_b
         ++i;
     }
 
+    //adicionar o pai ou nao??
+
     //inserindo vertice a na lista do vertice b
-    i = 0;
-    found = 0;
-    while (!found)
-    {
-        //se a lista ta vazia, insere o b primeiro
-        if (!g->array[i].head)
-        {
-            g->num_v++;
-            vertice = create_vertice(size_b, color_b, b);
-            g->array[i].head = vertice;
-            g->array[i].head->grau = 0;
+    // i = 0;
+    // found = 0;
+    // while (!found)
+    // {
+    //     //se a lista ta vazia, insere o b primeiro
+    //     if (!g->array[i].head)
+    //     {
+    //         g->num_v++;
+    //         vertice = create_vertice(size_b, color_b, b);
+    //         g->array[i].head = vertice;
+    //         g->array[i].head->grau = 0;
 
-            found = 1;
-        }
+    //         found = 1;
+    //     }
 
-        //se o b tem lista, adiciona o a nela
-        if (g->array[i].head->pos[0] == b[0] && g->array[i].head->pos[1] == b[1])
-        {
-            vertice = create_vertice(size_a, color_a, a);
-            Vertice *aux = g->array[i].head;
-            while (aux->next)
-            {
-                aux = aux->next;
-            }
+    //     //se o b tem lista, adiciona o a nela
+    //     if (g->array[i].head->pos[0] == b[0] && g->array[i].head->pos[1] == b[1])
+    //     {
+    //         vertice = create_vertice(size_a, color_a, a);
+    //         Vertice *aux = g->array[i].head;
+    //         while (aux->next)
+    //         {
+    //             aux = aux->next;
+    //         }
 
-            aux->next = vertice;
+    //         aux->next = vertice;
 
-            g->array[i].head->grau++;
-            found = 1;
-        }
-        ++i;
-    }
+    //         g->array[i].head->grau++;
+    //         found = 1;
+    //     }
+    //     ++i;
+    // }
 
     if (found == 1)
     {

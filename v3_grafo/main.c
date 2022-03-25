@@ -106,42 +106,62 @@ int count_color_region(int **m, int rows, int cols)
     return total;
 }
 
-void fronteira(Map **m, int init_l, int init_c, int l, int c, int fundo, Graph *g)
+void fronteira(Map **m, int l, int c, int fundo, PositionQueue *ngb_queue)
 {
     if ((*m)->map[l][c] == fundo)
     {
-        printf("%d ", (*m)->map[l][c]);
+        total++;
+        // printf("%d ", (*m)->map[l][c]);
         (*m)->map[l][c] = -(*m)->map[l][c];
         if ( (*m)->rows - 1 > l )
-            fronteira(m, init_l, init_c, l + 1, c, fundo, g);
+            fronteira(m, l + 1, c, fundo, ngb_queue);
         if ( (*m)->cols - 1 > c )
-            fronteira(m, init_l, init_c, l, c + 1, fundo, g);
+            fronteira(m, l, c + 1, fundo, ngb_queue);
         if ( l > 0 )
-            fronteira(m, init_l, init_c, l - 1, c, fundo, g);
+            fronteira(m, l - 1, c, fundo, ngb_queue);
         if ( c > 0 )
-            fronteira(m, init_l, init_c, l, c - 1, fundo, g);
+            fronteira(m, l, c - 1, fundo, ngb_queue);
     }
     else if ((*m)->map[l][c] != -fundo)
     {
         //posicoes que sao vizinhas da regiao encontrada no if
         // printf("else: (%d, %d) ", l, c);
-        // Position *p = (Position *)malloc(sizeof(Position));
-        // p->l = l;
-        // p->c = c;
-        // p->v = (*m)->map[l][c];
-        // push(ngb_queue, p);
-        int a[2];
-        a[0] = init_l;
-        a[1] = init_c;
-
-        int b[2];
-        b[0] = l;
-        b[1] = c;
-        add_edge(g, a, fundo, 1, b, 0, 0);
+        if (ngb_queue)
+        {
+            Position *p = (Position *)malloc(sizeof(Position));
+            p->l = l;
+            p->c = c;
+            p->v = (*m)->map[l][c];
+            push(ngb_queue, p);
+        }
     }
 }
 
-// Pos
+void find_regions(Graph *g, PositionQueue *queue, int size_a, int r, int c, Map *m)
+{
+    PositionQueue *p = (PositionQueue *)malloc(sizeof(PositionQueue));
+
+    Position *aux = queue->top;
+    int a[2];
+    a[0] = r;
+    a[1] = c;
+    int color_a = module(m->map[r][c]);
+
+    int b[2];
+    int color_b;
+    while (aux)
+    {
+        total = 0;
+        fronteira(&m, aux->l, aux->c, m->map[aux->l][aux->c], NULL);
+
+        b[0] = aux->l;
+        b[1] = aux->c;
+        color_b = module(m->map[aux->l][aux->c]);
+
+        add_edge(g, a, color_a, size_a, b, color_b, total);
+        aux = aux->prev;
+    }
+}
 
 void print_solution(Solution *s)
 {
@@ -167,22 +187,23 @@ int main(int argc, char const *argv[])
     PositionQueue *queue = (PositionQueue *)malloc(sizeof(PositionQueue));
     queue->top = NULL;
 
-    Graph *g = create_graph(map->rows*map->cols);
     //acha a fronteira da posicao 0,0
-    fronteira(&map, 0, 0, 0, 0, map->map[0][0], g);
+    total = 0;
+    fronteira(&map, 0, 0, map->map[0][0], queue);
 
+
+    //-----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
+
+    Graph *g = create_graph(map->rows*map->cols);
     //regioes da fronteira anterior
-    // find_regions(queue);
-
-    //-----------------------------------------------------------------------------
-    //-----------------------------------------------------------------------------
-
+    find_regions(g, queue, total, 0, 0, map);
 
     Position *aux = queue->top;
     int a[2] = {0, 0};
     int color_a = module(map->map[0][0]);
 
-    int b[2];
+    // int b[2];
     // while (aux)
     // {
     //     b[0] = aux->l;
@@ -190,14 +211,15 @@ int main(int argc, char const *argv[])
     //     add_edge(g, a, color_a, queue->size, b, 0, 0);
     //     aux = aux->prev;
     // }
-    printf("\n");
+    // printf("\n");
 
     printf("---- lista adj----\n");
+    printf("---- (x, y) - [color, color_count]----\n");
     for (int i = 0; i < g->num_v; ++i)
     {
     
         Vertice *aux = g->array[i].head;
-        while(aux)
+        while(aux != NULL)
         {
             printf("(%d, %d) - [%d - %d] --> ", aux->pos[0], aux->pos[1], aux->color, aux->size);
             aux = aux->next;
