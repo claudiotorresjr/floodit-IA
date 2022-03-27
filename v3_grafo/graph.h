@@ -4,15 +4,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "stack.h"
+
 typedef struct Vertice
 {
-    int state; //visitado ou nao
-    int size; //quantas cores
+    int size;
     int color;
-    int pos[2]; //a primeira posicao da regiao
-    int grau;
+    int region;
+    int pos[2];
     struct Vertice *next;
-    struct Vertice *parent;
 } Vertice;
 
 typedef struct AdjList
@@ -29,9 +29,10 @@ typedef struct Graph
     AdjList *array;
 } Graph;
 
-Vertice *create_vertice(int size, int color, int pos[2]);
-int has_edge(Graph *g, int a[2], int b[2]);
-void add_edge(Graph *g, int a[2], int color_a, int size_a, int b[2], int color_b, int size_b);
+Vertice *create_vertice(int size, int color, int region, int pos[2]);
+int has_edge(Graph *g, int a, int b);
+void add_edge(Graph *g, int a, int color_a, int size_a, int b, int color_b, int size_b, int pos[2]);
 Graph *create_graph(int size);
+void show_graph(Graph *g);
 
 #endif

@@ -29,8 +29,8 @@ typedef struct Solution
 } Solution;
 
 int **createMatrix(int rows, int cols);
-void showMatrix(int **matrix, int rows, int cols);
-Map *createMap(FILE *file);
+void show_matrix(int **matrix, int rows, int cols);
+Map *create_map(FILE *file);
 void paintOneColor(Map **m, int lin, int col, int init_c, int color);
 
 #endif

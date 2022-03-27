@@ -5,11 +5,11 @@
 #include "main.h"
 #include "stack.h"
 
-Map *createMap(FILE *file)
+Map *create_map(FILE *file)
 {
     Map *map = (Map *)malloc(sizeof(Map));
     fscanf(file, "%d %d %d\n", &map->rows, &map->cols, &map->n_colors);
-    map->map = allocateMatrix(map->rows, map->cols);
+    map->map = allocate_matrix(map->rows, map->cols);
 
     for (int i = 0; i < map->rows; i++)
     {
@@ -22,7 +22,7 @@ Map *createMap(FILE *file)
     return map;
 }
 
-void showMatrix(int **matrix, int rows, int cols)
+void show_matrix(int **matrix, int rows, int cols)
 {
     for (int i = 0; i < rows; i++)
     {
@@ -36,7 +36,7 @@ void showMatrix(int **matrix, int rows, int cols)
 
 int isSolved(Map *m)
 {
-    // showMatrix(m, lin, col);
+    // show_matrix(m, lin, col);
     int first_c = m->map[0][0];
     for (int i = 0; i < m->rows; ++i)
     {
@@ -137,23 +137,23 @@ void limpa_mapa(Map **m)
     }
 }
 
-void fronteira(Map **m, int l, int c, int fundo, Frontier *f)
+void frontier(Map **m, int l, int c, int atual_color, Frontier *f)
 {
-    if ((*m)->map[l][c] == fundo)
+    if ((*m)->map[l][c] == atual_color)
     {
         (*m)->map[l][c] = -(*m)->map[l][c];
         if ( (*m)->rows - 1 > l )
-            fronteira(m, l + 1, c, fundo, f);
+            frontier(m, l + 1, c, atual_color, f);
         if ( (*m)->cols - 1 > c )
-            fronteira(m, l, c + 1, fundo, f);
+            frontier(m, l, c + 1, atual_color, f);
         if ( l > 0 )
-            fronteira(m, l - 1, c, fundo, f);
+            frontier(m, l - 1, c, atual_color, f);
         if ( c > 0 )
-            fronteira(m, l, c - 1, fundo, f);
+            frontier(m, l, c - 1, atual_color, f);
     }
-    else if ( (*m)->map[l][c] != -fundo )
+    else if ( (*m)->map[l][c] != -atual_color )
     {
-        //printf("insere fronteira l: %d, c: %d, 0\n", l, c);
+        //printf("insere frontier l: %d, c: %d, 0\n", l, c);
         f->pos[f->size].l = l;
         f->pos[f->size].c = c;
         f->pos[f->size].v = 0;
@@ -161,10 +161,10 @@ void fronteira(Map **m, int l, int c, int fundo, Frontier *f)
     }
 }
 
-void fronteira_mapa(Map **m, Frontier *f)
+void frontier_mapa(Map **m, Frontier *f)
 {
     f->size = 0;
-    fronteira(m, 0, 0, (*m)->map[0][0], f);
+    frontier(m, 0, 0, (*m)->map[0][0], f);
     limpa_mapa(m);    
 }
 
@@ -177,13 +177,13 @@ int main(int argc, char const *argv[])
         exit(1);
     }
 
-    Map *map = createMap(map_file);
+    Map *map = create_map(map_file);
 
-    // showMatrix(map->map, map->rows, map->cols);
+    // show_matrix(map->map, map->rows, map->cols);
 
     PositionQueue *queue = (PositionQueue *)malloc(sizeof(PositionQueue));
     
-    //Criando ponteiro com as fronteiras
+    //Criando ponteiro com as frontiers
     Frontier *f = (Frontier *)malloc(sizeof(Frontier));
     f->size = 0;
     f->pos = (Position *)malloc(map->rows*map->cols*sizeof(Position));
@@ -195,8 +195,8 @@ int main(int argc, char const *argv[])
     int *ncorfront = (int *)malloc((map->n_colors+1)*sizeof(int));
     int cor = map->map[0][0];
 
-    //fronteira do mapa
-    fronteira_mapa(&map, f);
+    //frontier do mapa
+    frontier_mapa(&map, f);
     
     int ncor;
     while (f->size > 0)
@@ -206,7 +206,7 @@ int main(int argc, char const *argv[])
             ncorfront[i] = 0;
         }
 
-        //percorre todas as posicoes salvas na fronteira
+        //percorre todas as posicoes salvas na frontier
         for (int ia = 0; f->size > ia; ++ia)
         {
             ncorfront[map->map[f->pos[ia].l][f->pos[ia].c]] += 1;
@@ -223,7 +223,7 @@ int main(int argc, char const *argv[])
         }
         paintOneColor(&map, 0, 0, map->map[0][0], cor);
         solution->colors[solution->steps++] = cor;
-        fronteira_mapa(&map, f);
+        frontier_mapa(&map, f);
     }
 
     printf("%d\n", solution->steps);

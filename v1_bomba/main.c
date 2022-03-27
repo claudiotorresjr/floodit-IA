@@ -5,11 +5,11 @@
 #include "main.h"
 #include "stack.h"
 
-Map *createMap(FILE *file)
+Map *create_map(FILE *file)
 {
     Map *map = (Map *)malloc(sizeof(Map));
     fscanf(file, "%d %d %d\n", &map->rows, &map->cols, &map->n_colors);
-    map->map = allocateMatrix(map->rows, map->cols);
+    map->map = allocate_matrix(map->rows, map->cols);
 
     for (int i = 0; i < map->rows; i++)
     {
@@ -22,7 +22,7 @@ Map *createMap(FILE *file)
     return map;
 }
 
-void showMatrix(int **matrix, int rows, int cols)
+void show_matrix(int **matrix, int rows, int cols)
 {
     for (int i = 0; i < rows; i++)
     {
@@ -36,7 +36,7 @@ void showMatrix(int **matrix, int rows, int cols)
 
 int isSolved(Map *m)
 {
-    // showMatrix(m, lin, col);
+    // show_matrix(m, lin, col);
     int first_c = m->map[0][0];
     for (int i = 0; i < m->rows; ++i)
     {
@@ -121,9 +121,9 @@ int main(int argc, char const *argv[])
         exit(1);
     }
 
-    Map *map = createMap(map_file);
+    Map *map = create_map(map_file);
 
-    // showMatrix(map->map, map->rows, map->cols);
+    // show_matrix(map->map, map->rows, map->cols);
 
     PositionQueue *queue = (PositionQueue *)malloc(sizeof(PositionQueue));
     queue->top = NULL;
@@ -159,7 +159,7 @@ int main(int argc, char const *argv[])
                 print_moves(next->moves);
                 return 0;
             }
-            // showMatrix(next->map->map, next->map->rows, next->map->cols);
+            // show_matrix(next->map->map, next->map->rows, next->map->cols);
             // sleep(1);
 
             push(queue, next);
@@ -170,23 +170,23 @@ int main(int argc, char const *argv[])
     // paintOneColor(&map, 0, 0, map->map[0][0], 1);
 
     // printf("Before painting with color 1...\n");
-    // showMatrix(map->map, map->rows, map->cols);
+    // show_matrix(map->map, map->rows, map->cols);
     // paintOneColor(&map, 0, 0, map->map[0][0], 3);
 
     // printf("Before painting with color 3...\n");
-    // showMatrix(map->map, map->rows, map->cols);
+    // show_matrix(map->map, map->rows, map->cols);
     // paintOneColor(&map, 0, 0, map->map[0][0], 1);
 
     // printf("Before painting with color 1...\n");
-    // showMatrix(map->map, map->rows, map->cols);
+    // show_matrix(map->map, map->rows, map->cols);
     // paintOneColor(&map, 0, 0, map->map[0][0], 2);
 
     // printf("Before painting with color 2...\n");
-    // showMatrix(map->map, map->rows, map->cols);
+    // show_matrix(map->map, map->rows, map->cols);
     // paintOneColor(&map, 0, 0, map->map[0][0], 1);
 
     // printf("Before painting with color 1...\n");
-    // showMatrix(map->map, map->rows, map->cols);
+    // show_matrix(map->map, map->rows, map->cols);
 
     return 0;
 }

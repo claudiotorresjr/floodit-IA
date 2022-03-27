@@ -19,7 +19,7 @@ typedef struct PositionQueue
     struct State *top;
 } PositionQueue;
 
-int **allocateMatrix(int rows, int cols);
+int **allocate_matrix(int rows, int cols);
 State *create_state(Map *m);
 void copy_matrix(Map *m1, Map *m2);
 void push(PositionQueue *queue, State *s);

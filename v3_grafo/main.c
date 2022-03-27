@@ -1,12 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <time.h>
 
 #include "main.h"
 #include "graph.h"
 #include "stack.h"
 
 int total;
+int atual_region = 0;
+int total_regions = 0;
 
 int module(int a)
 {
@@ -18,30 +21,45 @@ int module(int a)
     return a;
 }
 
-Map *createMap(FILE *file)
+Map *create_map(FILE *file)
 {
     Map *map = (Map *)malloc(sizeof(Map));
     fscanf(file, "%d %d %d\n", &map->rows, &map->cols, &map->n_colors);
-    map->map = allocateMatrix(map->rows, map->cols);
+    map->map = allocate_matrix(map->rows, map->cols);
 
     for (int i = 0; i < map->rows; i++)
     {
         for (int j = 0; j < map->cols; j++)
         {
-            fscanf(file, "%d ", &map->map[i][j]);
+            map->map[i][j].region = -1;
+            fscanf(file, "%d ", &map->map[i][j].color);
         }
     }
 
     return map;
 }
 
-void showMatrix(int **matrix, int rows, int cols)
+void reset_map(Map **m)
+{
+    for (int i = 0; i < (*m)->rows; ++i)
+    {
+        for (int j = 0; j < (*m)->cols; ++j)
+        {
+            if ((*m)->map[i][j].color < 0)
+            {
+                (*m)->map[i][j].color = -(*m)->map[i][j].color;
+            }
+        }
+    }
+}
+
+void show_matrix(Index **matrix, int rows, int cols)
 {
     for (int i = 0; i < rows; i++)
     {
         for (int j = 0; j < cols; j++)
         {
-            printf("%d ", matrix[i][j]);
+            printf("%d ", matrix[i][j].region);
         }
         printf("\n");
     }
@@ -85,80 +103,74 @@ void paintOneColor(int ***m, int rows, int cols, int r, int c, int init_c, int c
     }
 }
 
-int count_color_region(int **m, int rows, int cols)
+void frontier(Map **m, int l, int c, int atual_color, int region, Graph *g)
 {
-    int first_c = m[0][0];
-    int total = 0;
-
-    int i, j;
-    for (i = 0; i < rows; ++i)
-    {
-        for (j = 0; (m[i][j] == first_c && j < cols); ++j)
-        {
-            total++;
-        }
-        if (i + 1 < rows && m[i+1][0] != first_c && m[i+1][1] != first_c)
-        {
-            break;
-        }
-    }
-
-    return total;
-}
-
-void fronteira(Map **m, int l, int c, int fundo, PositionQueue *ngb_queue)
-{
-    if ((*m)->map[l][c] == fundo)
+    if ((*m)->map[l][c].color == atual_color)
     {
         total++;
-        // printf("%d ", (*m)->map[l][c]);
-        (*m)->map[l][c] = -(*m)->map[l][c];
-        if ( (*m)->rows - 1 > l )
-            fronteira(m, l + 1, c, fundo, ngb_queue);
-        if ( (*m)->cols - 1 > c )
-            fronteira(m, l, c + 1, fundo, ngb_queue);
-        if ( l > 0 )
-            fronteira(m, l - 1, c, fundo, ngb_queue);
-        if ( c > 0 )
-            fronteira(m, l, c - 1, fundo, ngb_queue);
-    }
-    else if ((*m)->map[l][c] != -fundo)
-    {
-        //posicoes que sao vizinhas da regiao encontrada no if
-        // printf("else: (%d, %d) ", l, c);
-        if (ngb_queue)
+
+        // Position *p = (Position *)malloc(sizeof(Position));
+        // p->l = l;
+        // p->c = c;
+        // p->v = module((*m)->map[l][c].color);
+        // push(region, p);
+
+        (*m)->map[l][c].color = -(*m)->map[l][c].color;
+        if ((*m)->map[l][c].region == -1)
         {
-            Position *p = (Position *)malloc(sizeof(Position));
-            p->l = l;
-            p->c = c;
-            p->v = (*m)->map[l][c];
-            push(ngb_queue, p);
+            (*m)->map[l][c].region = region;
         }
+        if ((*m)->rows - 1 > l)
+            frontier(m, l + 1, c, atual_color, region, g);
+        if ((*m)->cols - 1 > c)
+            frontier(m, l, c + 1, atual_color, region, g);
+        if (l > 0)
+            frontier(m, l - 1, c, atual_color, region, g);
+        if (c > 0)
+            frontier(m, l, c - 1, atual_color, region, g);
     }
-}
-
-void find_regions(Graph *g, PositionQueue *queue, int size_a, int r, int c, Map *m)
-{
-    int a[2];
-    a[0] = r;
-    a[1] = c;
-    int color_a = module(m->map[r][c]);
-
-    int b[2];
-    int color_b;
-
-    Position *aux = queue->top;
-    while (aux)
+    else if ((*m)->map[l][c].color != -atual_color)
     {
-        total = 0;
-        fronteira(&m, aux->l, aux->c, m->map[aux->l][aux->c], NULL);
+        if (g)
+        {
+            if ((*m)->map[l][c].color > 0)
+            {
+                clock_t start, end;
+                double cpu_time_used;
+                // printf("COR %d regiao %d,%d:\n", (*m)->map[l][c].color, l, c);
+                int queue = 0;
 
-        b[0] = aux->l;
-        b[1] = aux->c;
-        color_b = module(m->map[aux->l][aux->c]);
+                int save_total = total;
+                total = 0;
 
-        add_edge(g, a, color_a, size_a, b, color_b, total);
-        aux = aux->prev;
+                if ((*m)->map[l][c].region > -1)
+                    return;
+
+                    total_regions++;
+
+                int save_region = region;
+                region = total_regions;
+                frontier(m, l, c, (*m)->map[l][c].color, region, NULL);
+
+                int pos[2];
+                pos[0] = l;
+                pos[1] = c;
+
+                add_edge(
+                    g,
+                    save_region,
+                    module(atual_color),
+                    save_total,
+                    region,
+                    module((*m)->map[l][c].color),
+                    total,
+                    pos
+                );
+
+                total = save_total;
+                region = save_region;
+            }
+        }
     }
 }
 
@@ -174,6 +186,9 @@ void print_solution(Solution *s)
 
 int main(int argc, char const *argv[])
 {
+    clock_t start, end;
+    double cpu_time_used;
+
     FILE *map_file = stdin;
     if (map_file == NULL)
     {
@@ -181,56 +196,69 @@ int main(int argc, char const *argv[])
         exit(1);
     }
 
-    Map *map = createMap(map_file);
-    printf("-- pos 0,0 com cor 2... vizinhos:\n");
-    PositionQueue *queue = (PositionQueue *)malloc(sizeof(PositionQueue));
-    queue->top = NULL;
+    Map *map = create_map(map_file);
+    PositionQueue *region_queue = (PositionQueue *)malloc(sizeof(PositionQueue));
+    region_queue->top = NULL;
 
     Graph *g = create_graph(map->rows*map->cols);
 
-    //acha a fronteira da posicao 0,0
+    // int reg = 0;
+    // for (int i = 0; i < map->rows; ++i)
+    // {
+    //     for (int j = 0; j < map->cols; ++j)
+    //     {
+    //         //if (map->map[i][j].region == atual_region + 1)
+    //         {   
+    //             printf("%d %d\n", i, j);
+    //             total = 0;
+    //             frontier(&map, i, j, map->map[i][j].color, region_queue, g);
+    //             reset_map(&map);
+    //             show_matrix(map->map, map->rows, map->cols);
+    //             printf("------------------\n");
+
+    //             atual_region = total_regions + 1;
+    //             total_regions = 0;
+    //         }
+    //     }
+    // }
+
     total = 0;
-    fronteira(&map, 0, 0, map->map[0][0], queue);
-    //regioes da fronteira
-    find_regions(g, queue, total, 0, 0, map);
+    frontier(&map, 0, 0, map->map[0][0].color, 0, g);
+    reset_map(&map);
 
+    int region = 1;
     for (int i = 0; i < g->num_v; ++i)
     {
+        // start = clock();
     
-        Vertice *aux = g->array[i].head;
-        int r, c;
+        Vertice *aux = g->array[i].head->next;
+        // printf("%d\n", i);
         while(aux != NULL)
         {
-            total = 0;
-            r = aux->pos[0];
-            c = aux->pos[1];
-            
-            PositionQueue *queue = (PositionQueue *)malloc(sizeof(PositionQueue));
-            queue->top = NULL;
+            // PositionQueue *region_queue = (PositionQueue *)malloc(sizeof(PositionQueue));
+            // region_queue->top = NULL;
 
-            fronteira(&map, r, c, map->map[r][c], queue);
-            find_regions(g, queue, total, r, c, map);
-        
+            // printf("procurando regiao %d\n", region);
+            // if (aux->region == i)
+            //     continue;
+            frontier(&map, aux->pos[0], aux->pos[1], aux->color, region, g);
+            reset_map(&map);
+            region = total_regions + 1;
+            // total_regions = 0;
+
             aux = aux->next;
         }
+        if (i == 5)
+        break;
+        // end = clock();
+        // cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+        // printf("fun() took %f seconds to execute \n", cpu_time_used);
     }
+    show_graph(g);
+    show_matrix(map->map, map->rows, map->cols);
+    // printf("------------------\n");
+    printf("%d\n", g->num_v);
 
-    printf("---- lista adj----\n");
-    printf("---- (x, y) - [color, color_count]----\n");
-    for (int i = 0; i < g->num_v; ++i)
-    {
-    
-        Vertice *aux = g->array[i].head;
-        while(aux != NULL)
-        {
-            printf("(%d, %d) - [%d - %d] --> ", aux->pos[0], aux->pos[1], aux->color, aux->size);
-            aux = aux->next;
-        }
-        printf("\n");
-    }
-
-
-    // showMatrix(map->map, map->rows, map->cols);
 
     // Solution *solution = (Solution *)malloc(sizeof(Solution));
     // solution->steps = 0;
@@ -258,7 +286,7 @@ int main(int argc, char const *argv[])
     //         int **m_aux = copy_matrix(map);
     //         total = 0;
     //         paintOneColor(&m_aux, map->rows, map->cols, 0, 0, m_aux[0][0], i);
-    //         fronteira(&m_aux, map->rows, map->cols, 0, 0, m_aux[0][0]);
+    //         frontier(&m_aux, map->rows, map->cols, 0, 0, m_aux[0][0]);
     //         if (isSolved(m_aux, map->rows, map->cols))
     //         {
     //             solution->colors[solution->steps++] = i;

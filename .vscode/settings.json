@@ -3,7 +3,9 @@
         "map": "c",
         "stdlib.h": "c",
         "algorithm": "c",
-        "unistd.h": "c"
+        "unistd.h": "c",
+        "random": "c",
+        "graph.h": "c"
     },
-    "C_Cpp.errorSquiggles": "Disabled"
+    "C_Cpp.errorSquiggles": "Enabled"
 }

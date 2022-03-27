@@ -4,7 +4,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "main.h"
+typedef struct Index
+{
+    int region;
+    int color;
+} Index;
 
 typedef struct Position
 {
@@ -20,8 +24,7 @@ typedef struct PositionQueue
     struct Position *top;
 } PositionQueue;
 
-int **allocateMatrix(int rows, int cols);
-int **copy_matrix(Map *m);
+Index **allocate_matrix(int rows, int cols);
 void push(PositionQueue *queue, Position *s);
 Position *pop(PositionQueue *queue);
 

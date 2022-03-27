@@ -3,26 +3,12 @@
 #include "stack.h"
 #include "main.h"
 
-int **allocateMatrix(int rows, int cols)
+Index **allocate_matrix(int rows, int cols)
 {
-    int **matrix = (int **)malloc(rows * sizeof(int *));
+    Index **matrix = (Index **)malloc(rows * sizeof(Index *));
     for (int i = 0; i < rows; ++i)
     {
-        matrix[i] = (int *)malloc(cols * sizeof(int));
-    }
-
-    return matrix;
-}
-
-int **copy_matrix(Map *m)
-{
-    int **matrix = allocateMatrix(m->rows, m->cols);
-    for (int i = 0; i < m->rows; ++i)
-    {
-        for (int j = 0; j <  m->cols; ++j)
-        {
-            matrix[i][j] = m->map[i][j];
-        }
+        matrix[i] = (Index *)malloc(cols * sizeof(Index));
     }
 
     return matrix;

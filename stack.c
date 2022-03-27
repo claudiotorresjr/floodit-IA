@@ -3,7 +3,7 @@
 #include "stack.h"
 #include "main.h"
 
-int **allocateMatrix(int rows, int cols)
+int **allocate_matrix(int rows, int cols)
 {
     int **matrix = (int **)malloc(rows * sizeof(int *));
     for (int i = 0; i < rows; ++i)
@@ -18,7 +18,7 @@ State *create_state(Map *m)
 {
     State *new = (State *)malloc(sizeof(State));
     new->map = (Map *)malloc(sizeof(Map));
-    new->map->map = allocateMatrix(m->rows, m->cols);
+    new->map->map = allocate_matrix(m->rows, m->cols);
     new->map->rows = m->rows;
     new->map->cols = m->cols;
     new->map->n_colors = m->n_colors;

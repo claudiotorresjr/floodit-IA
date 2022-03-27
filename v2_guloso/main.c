@@ -7,11 +7,11 @@
 
 int total;
 
-Map *createMap(FILE *file)
+Map *create_map(FILE *file)
 {
     Map *map = (Map *)malloc(sizeof(Map));
     fscanf(file, "%d %d %d\n", &map->rows, &map->cols, &map->n_colors);
-    map->map = allocateMatrix(map->rows, map->cols);
+    map->map = allocate_matrix(map->rows, map->cols);
 
     for (int i = 0; i < map->rows; i++)
     {
@@ -24,7 +24,7 @@ Map *createMap(FILE *file)
     return map;
 }
 
-void showMatrix(int **matrix, int rows, int cols)
+void show_matrix(int **matrix, int rows, int cols)
 {
     for (int i = 0; i < rows; i++)
     {
@@ -95,19 +95,19 @@ int count_color_region(int **m, int rows, int cols)
     return total;
 }
 
-void fronteira(int ***m, int rows, int cols, int l, int c, int fundo)
+void frontier(int ***m, int rows, int cols, int l, int c, int atual_color)
 {
-    if ((*m)[l][c] == fundo)
+    if ((*m)[l][c] == atual_color)
     {
         total++;
         if ( rows - 1 > l )
-            fronteira(m, rows, cols, l + 1, c, fundo);
+            frontier(m, rows, cols, l + 1, c, atual_color);
         if ( cols - 1 > c )
-            fronteira(m, rows, cols, l, c + 1, fundo);
+            frontier(m, rows, cols, l, c + 1, atual_color);
         if ( l > 0 )
-            fronteira(m, rows, cols, l - 1, c, fundo);
+            frontier(m, rows, cols, l - 1, c, atual_color);
         if ( c > 0 )
-            fronteira(m, rows, cols, l, c - 1, fundo);
+            frontier(m, rows, cols, l, c - 1, atual_color);
     }
 }
 
@@ -130,9 +130,9 @@ int main(int argc, char const *argv[])
         exit(1);
     }
 
-    Map *map = createMap(map_file);
+    Map *map = create_map(map_file);
 
-    // showMatrix(map->map, map->rows, map->cols);
+    // show_matrix(map->map, map->rows, map->cols);
 
     Solution *solution = (Solution *)malloc(sizeof(Solution));
     solution->steps = 0;
@@ -160,7 +160,7 @@ int main(int argc, char const *argv[])
             int **m_aux = copy_matrix(map);
             total = 0;
             paintOneColor(&m_aux, map->rows, map->cols, 0, 0, m_aux[0][0], i);
-            fronteira(&m_aux, map->rows, map->cols, 0, 0, m_aux[0][0]);
+            frontier(&m_aux, map->rows, map->cols, 0, 0, m_aux[0][0]);
             if (isSolved(m_aux, map->rows, map->cols))
             {
                 solution->colors[solution->steps++] = i;
