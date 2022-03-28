@@ -13,15 +13,15 @@ typedef struct State
     struct State *prev;
 } State;
 
-typedef struct PositionQueue
+typedef struct StateQueue
 {
     struct State *top;
-} PositionQueue;
+} StateQueue;
 
 int **allocate_matrix(int rows, int cols);
 State *create_state(int color);
 int **copy_matrix(Map *m);
-void push(PositionQueue *queue, State *s);
-State *pop(PositionQueue *queue);
+void push(StateQueue *queue, State *s);
+State *pop(StateQueue *queue);
 
 #endif

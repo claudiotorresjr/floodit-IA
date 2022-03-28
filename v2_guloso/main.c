@@ -138,7 +138,7 @@ int main(int argc, char const *argv[])
     solution->steps = 0;
     solution->colors = (int *)malloc(map->rows*map->cols*sizeof(int));
 
-    PositionQueue *queue = (PositionQueue *)malloc(sizeof(PositionQueue));
+    StateQueue *queue = (StateQueue *)malloc(sizeof(StateQueue));
     queue->top = NULL;
 
     State *new = create_state(map->map[0][0]);

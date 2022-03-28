@@ -5,7 +5,12 @@
         "algorithm": "c",
         "unistd.h": "c",
         "random": "c",
-        "graph.h": "c"
+        "graph.h": "c",
+        "array": "c",
+        "string_view": "c",
+        "initializer_list": "c",
+        "utility": "c",
+        "iterator": "c"
     },
     "C_Cpp.errorSquiggles": "Enabled"
 }

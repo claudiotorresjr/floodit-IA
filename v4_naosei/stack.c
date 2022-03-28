@@ -14,13 +14,13 @@ Index **allocate_matrix(int rows, int cols)
     return matrix;
 }
 
-State *create_state(int region, int distance, int color)
+State *create_state(int parent, int size, int *regions)
 {
     State *s = (State *)malloc(sizeof(State));
 
-    s->region = region;
-    s->distance = distance;
-    s->color = color;
+    s->parent = parent;
+    s->size = size;
+    s->regions = regions;
 
     return s;
 }
@@ -50,7 +50,7 @@ State *pop(StateQueue *queue)
     State *aux = queue->top;
     queue->top = queue->top->prev;
 
-    State *r = create_state(aux->region, aux->distance, aux->color);
+    State *r = create_state(aux->parent, aux->size, aux->regions);
 
     free(aux);
 

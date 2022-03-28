@@ -125,7 +125,7 @@ int main(int argc, char const *argv[])
 
     // show_matrix(map->map, map->rows, map->cols);
 
-    PositionQueue *queue = (PositionQueue *)malloc(sizeof(PositionQueue));
+    StateQueue *queue = (StateQueue *)malloc(sizeof(StateQueue));
     queue->top = NULL;
 
     int rows = map->rows;

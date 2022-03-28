@@ -251,74 +251,44 @@ int main(int argc, char const *argv[])
     solution->steps = 0;
     solution->colors = (int *)malloc(map->rows*map->cols*sizeof(int));
 
-    // int *regions = (int *)malloc((1)*sizeof(int));
-    // regions[0] = 0;
-    // State *first = create_state(0, 1, regions);
+    int *regions = (int *)malloc((1)*sizeof(int));
+    regions[0] = 0;
+    State *first = create_state(0, 1, regions);
 
-    // StateQueue *queue = (StateQueue *)malloc(sizeof(StateQueue));
-    // queue->top = NULL;
+    StateQueue *queue = (StateQueue *)malloc(sizeof(StateQueue));
+    queue->top = NULL;
 
-    // push(queue, first);
+    push(queue, first);
     // g->array[0].head->visited = 1;
     g->array->visiteds++;
 
     int stop = 0;
     int anterior = 0;
 
-    // distance_between_nodes(g, 0, 1);
+    distance_between_nodes(g, 0, 1);
 
-    for (int i = 1; i < g->num_v; ++i)
+    Vertice *aux = g->array[0].head->next;
+    while(aux != NULL)
     {
-        for (int j = 0; j < g->num_v; ++j)
-        {
-            g->array[j].head->visited = 0;
-        }
-
-        StateQueue *lifo = (StateQueue *)malloc(sizeof(StateQueue));
-        lifo->top = NULL;
-
-        State *s = create_state(g->array[0].head->region, 0, g->array[0].head->color);
-        s->distance = 0;
-        g->array[0].head->visited = 1;
-
-        push(lifo, s);
-
-        while(lifo->top)
-        {
-            State *current = pop(lifo);
-            // printf("%d\n", current->region);
-
-            if (current->region == i)
-            {
-                printf("distancia 0 ao %d == %d\n", i, current->distance);
-                break;
-            }
-
-            Vertice *aux = g->array[current->region].head->next;
-            // printf("vendo lista da regiao %d\n", current->region);
-            int distance;
-            while(aux != NULL)
-            {
-                distance = 0;
-                if (!g->array[aux->region].head->visited)
-                {
-                    // printf("nao visitei %d\n", aux->region);
-                    if(aux->color != g->array[current->region].head->color)
-                    {
-                        distance = 1 + current->distance;
-                    }
-                    
-                    State *s = create_state(aux->region, 0, aux->color);
-                    g->array[aux->region].head->visited = 1;
-                    s->distance = distance;
-
-                    push(lifo, s);
-                }
-                aux = aux->next;
-            }
-        }
+        State *s = create_state(aux->region, 0, NULL);
+        push(queue, s);
+        aux = aux->next;
     }
 
+    for (int i = 0; i < g->num_v; ++i)
+    {
+        // start = clock();
+        Vertice *aux = g->array[i].head->next;
+        // printf("indice da lista: %d\n", i);
+        while(aux != NULL)
+        {
+            
+            aux = aux->next;
+        }
+        // end = clock();
+        // cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+        // printf("fun() took %f seconds to execute \n", cpu_time_used);
+    }
     //while (queue->top)
     //{
     //    State *current = pop(queue);

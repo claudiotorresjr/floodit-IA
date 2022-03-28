@@ -37,7 +37,7 @@ int **copy_matrix(Map *m)
     return matrix;
 }
 
-void push(PositionQueue *queue, State *s)
+void push(StateQueue *queue, State *s)
 {    
     if(!queue->top)
     {
@@ -50,7 +50,7 @@ void push(PositionQueue *queue, State *s)
     queue->top = s;
 }
 
-State *pop(PositionQueue *queue)
+State *pop(StateQueue *queue)
 {
     if (!queue->top)
     {

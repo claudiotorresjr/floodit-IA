@@ -20,9 +20,10 @@ typedef struct Position
 
 typedef struct State
 {
-    int region;
+    int parent;
     int color;
-    int distance;
+    int size;
+    int *regions;
     struct State *prev;
 } State;
 
@@ -33,7 +34,7 @@ typedef struct StateQueue
 } StateQueue;
 
 Index **allocate_matrix(int rows, int cols);
-State *create_state(int region, int size, int color);
+State *create_state(int parent, int size, int *regions);
 void push(StateQueue *queue, State *s);
 State *pop(StateQueue *queue);
 

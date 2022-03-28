@@ -181,7 +181,7 @@ int main(int argc, char const *argv[])
 
     // show_matrix(map->map, map->rows, map->cols);
 
-    PositionQueue *queue = (PositionQueue *)malloc(sizeof(PositionQueue));
+    StateQueue *queue = (StateQueue *)malloc(sizeof(StateQueue));
     
     //Criando ponteiro com as frontiers
     Frontier *f = (Frontier *)malloc(sizeof(Frontier));
