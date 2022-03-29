@@ -302,7 +302,7 @@ int main(int argc, char const *argv[])
             while(lifo->top)
             {
                 State *current = pop(lifo);
-                g->array[current->region].head->visited = 1;
+                g->array[current->region].head->visited = 2;
                 printf("-----pop na regiao: %d\n", current->region);
 
                 if (current->region == i)
