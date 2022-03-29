@@ -1,5 +1,5 @@
-#ifndef _SGRAPH_H
-#define _SGRAPH_H
+#ifndef _GRAPH_H
+#define _GRAPH_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -32,7 +32,7 @@ typedef struct Graph
 } Graph;
 
 int distance_between_nodes(Graph *g, int from, int to);
-void initialize_array(int **colors, int size, int v);
+void initialize_array(int **colors, int size);
 int *verify_max_color_count(Graph *g, State *current, int t_colors);
 Vertice *create_vertice(int size, int color, int region, int pos[2]);
 int has_edge(Graph *g, int a, int b);

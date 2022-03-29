@@ -267,93 +267,100 @@ int main(int argc, char const *argv[])
 
     // distance_between_nodes(g, 0, 1);
 
-    while (!isSolved(map->map, map->rows, map->cols))
+    int *colors = (int *)calloc(((map->n_colors)+1), sizeof(int));
+
+    for (int c = 1; c <= map->n_colors; ++c)
     {
-        int *colors = (int *)malloc(((map->n_colors)+1)*sizeof(int));
-        initialize_array(&colors, (map->n_colors)+1, 0);
+        printf("pintando com a cor: %d\n", c);
 
-        for (int c = 1; c <= map->n_colors; ++c)
+        if (c == g->array[0].head->color)
         {
-            if (c == g->array[0].head->color)
+            continue;
+        }
+
+        int total_distance = 0;
+        for (int i = 1; i < g->num_v; ++i)
+        {
+            printf("Buscando região %d\n", i);
+            int atual_v_distance = g->num_e;
+            
+            for (int j = 0; j < g->num_v; ++j)
             {
-                continue;
+                g->array[j].head->visited = 0;
             }
-            int total_distance = 0;
-            for (int i = 1; i < g->num_v; ++i)
+
+            StateQueue *lifo = (StateQueue *)malloc(sizeof(StateQueue));
+            lifo->top = NULL;
+
+            State *s = create_state(g->array[0].head->region, 0, g->array[0].head->color);
+            g->array[0].head->color = c;
+            s->distance = 0;
+            // g->array[0].head->visited = 1;
+
+            push(lifo, s);
+
+            while(lifo->top)
             {
-                for (int j = 0; j < g->num_v; ++j)
-                {
-                    g->array[j].head->visited = 0;
+                State *current = pop(lifo);
+                g->array[current->region].head->visited = 1;
+                printf("-----pop na regiao: %d\n", current->region);
+
+                if (current->region == i)
+                {   
+                    if (i == 4)
+                        printf("distancia 0 ao %d == %d\n", i, current->distance);
+                    if (current->distance < atual_v_distance)
+                    {
+                        atual_v_distance = current->distance;
+                    }
                 }
 
-                StateQueue *lifo = (StateQueue *)malloc(sizeof(StateQueue));
-                lifo->top = NULL;
-
-                State *s = create_state(g->array[0].head->region, 0, g->array[0].head->color);
-                g->array[0].head->color = c;
-                s->distance = 0;
-                g->array[0].head->visited = 1;
-
-                push(lifo, s);
-
-                while(lifo->top)
+                Vertice *aux = g->array[current->region].head->next;
+                // printf("vendo lista da regiao %d\n", current->region);
+                int distance;
+                int atual_color = g->array[current->region].head->color;
+                while(aux != NULL)
                 {
-                    State *current = pop(lifo);
-                    // printf("%d\n", current->region);
-
-                    if (current->region == i)
+                    distance = 0;
+                    if (g->array[aux->region].head->visited == 0)
                     {
-                        // printf("distancia 0 ao %d == %d\n", i, current->distance);
-                        total_distance += current->distance;
-                        break;
-                    }
-
-                    Vertice *aux = g->array[current->region].head->next;
-                    // printf("vendo lista da regiao %d\n", current->region);
-                    int distance;
-                    while(aux != NULL)
-                    {
-                        distance = 0;
-                        if (!g->array[aux->region].head->visited)
+                        printf("-> push em %d\n", aux->region);
+                        if(aux->color != atual_color)
                         {
-                            // printf("nao visitei %d\n", aux->region);
-                            if(aux->color != g->array[current->region].head->color)
-                            {
-                                distance = 1 + current->distance;
-                            }
-                            
-                            State *s = create_state(aux->region, 0, aux->color);
-                            g->array[aux->region].head->visited = 1;
-                            s->distance = distance;
-
-                            push(lifo, s);
+                            distance = 1 + current->distance;
                         }
-                        aux = aux->next;
+                        
+                        State *s = create_state(aux->region, 0, aux->color);
+                        g->array[aux->region].head->visited = 2;
+                        s->distance = distance;
+
+                        push(lifo, s);
                     }
+                    aux = aux->next;
                 }
+                // g->array[current->region].head->visited = 0;
             }
-            colors[c] = total_distance;
-            // solution->colors[solution->steps++] = min_distance;
-            // paintOneColor(&map, map->rows, map->cols, 0, 0, map->map[0][0].color, min_distance);
-            // printf("para cor %d: %d\n", c, total_distance);
+            // printf("distancia 0 ao %d == %d\n", i, atual_v_distance);
         }
-
-        int min_distance = map->rows*map->cols;
-        int color = 0;
-        for (int d = 1; d < (map->n_colors)+1; ++d)
-        {
-            if (colors[d] < min_distance)
-            {
-                min_distance = colors[d];
-                color = d;
-            }
-        }
-
-        printf("para cor %d: %d\n", color, min_distance);
-        solution->colors[solution->steps++] = color;
+        colors[c] = total_distance;
         break;
     }
-    print_solution(solution);
+
+    // int min_distance = map->rows*map->cols;
+    // int color = 0;
+    // for (int d = 1; d < (map->n_colors)+1; ++d)
+    // {
+    //     if (colors[d] < min_distance)
+    //     {
+    //         min_distance = colors[d];
+    //         color = d;
+    //     }
+    // }
+
+    // printf("para cor %d: %d\n", color, min_distance);
+    // solution->colors[solution->steps++] = color;
+
+    // print_solution(solution);
 
     return 0;
 }

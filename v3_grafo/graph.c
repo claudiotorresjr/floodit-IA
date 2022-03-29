@@ -10,12 +10,9 @@ int distance_between_nodes(Graph *g, int from, int to)
         
 }
 
-void initialize_array(int **colors, int size, int v)
+void initialize_array(int **colors, int size)
 {
-    for (int i = 0; i < size; ++i)
-    {
-        (*colors)[i] = v;
-    }
+
 }
 
 Vertice *create_vertice(int size, int color, int region, int pos[2])
@@ -28,7 +25,6 @@ Vertice *create_vertice(int size, int color, int region, int pos[2])
     v->visited = 0;
     v->pos[0] = pos[0];
     v->pos[1] = pos[1];
-    // printf("criando vertice na pos %d-%d\n", v->pos[0], v->pos[1]);
     v->next = NULL;
 
     return v;
@@ -93,6 +89,11 @@ void add_edge(Graph *g, int a, int color_a, int size_a, int b, int color_b, int 
 
         aux->next = vertice;
         found = 1;
+    }
+
+    if (found)
+    {
+        g->num_e++;
     }
 }
 
