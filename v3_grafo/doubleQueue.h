@@ -10,9 +10,16 @@
 typedef struct DoubleQueue
 {
     int size;
-    struct State *first;
-    struct State *last;
+    struct State *head;
+    struct State *tail;
 } DoubleQueue;
 
+DoubleQueue *dq_create();
+void dq_show_list(DoubleQueue *queue);
+int dq_empty(DoubleQueue *queue);
+void dq_insert_head(DoubleQueue *queue, State *s);
+State *dq_remove_front(DoubleQueue *queue);
+void dq_insert_tail(DoubleQueue *queue, State *s);
+State *dq_remove_tail(DoubleQueue *queue);
 
 #endif

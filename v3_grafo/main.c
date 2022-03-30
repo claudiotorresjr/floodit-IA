@@ -6,6 +6,7 @@
 #include "main.h"
 #include "graph.h"
 #include "stack.h"
+#include "doubleQueue.h"
 
 int total;
 int atual_region = 0;
@@ -82,25 +83,22 @@ int isSolved(Index **m, int r, int c)
     return 1;    
 }
 
-void paintOneColor(Map **m, int rows, int cols, int r, int c, int init_c, int color)
+void paint_graph(Graph *g, Vertice *v, int base_color, int color)
 {
-    (*m)->map[r][c].color = color;
-    if (rows - 1 > r && (*m)->map[r + 1][c].color == init_c)
+    g->array[v->region].head->visited = 1;
+    g->array[v->region].head->color = color;
+
+    Vertice *aux = v->next;
+    while (aux)
     {
-        paintOneColor(m, rows, cols, r + 1, c, init_c, color);
+        if (aux->color == base_color && !g->array[aux->region].head->visited)
+        {
+            paint_graph(g, g->array[aux->region].head, base_color, color);
+        }
+
+        aux = aux->next;
     }
-    if (cols - 1 > c && (*m)->map[r][c + 1].color == init_c)
-    {
-        paintOneColor(m, rows, cols, r, c + 1, init_c, color);
-    }
-    if (r > 0 && (*m)->map[r - 1][c].color == init_c)
-    {
-        paintOneColor(m, rows, cols, r - 1, c, init_c, color);
-    }
-    if (c > 0 && (*m)->map[r][c - 1].color == init_c)
-    {
-        paintOneColor(m, rows, cols, r, c - 1, init_c, color);
-    }
+    
 }
 
 void frontier(Map **m, int l, int c, int atual_color, int region, Graph *g)
@@ -194,6 +192,22 @@ void print_solution(Solution *s)
     printf("\n");
 }
 
+int calculate_min_distance(int size, int n_colors, int *colors)
+{
+    int min_distance = size;
+    int color = 0;
+    for (int d = 1; d < (n_colors)+1; ++d)
+    {
+        if (colors[d] < min_distance && colors[d] != -1)
+        {
+            min_distance = colors[d];
+            color = d;
+        }
+    }
+
+    return color;
+}
+
 int main(int argc, char const *argv[])
 {
     clock_t start, end;
@@ -251,116 +265,44 @@ int main(int argc, char const *argv[])
     solution->steps = 0;
     solution->colors = (int *)malloc(map->rows*map->cols*sizeof(int));
 
-    // int *regions = (int *)malloc((1)*sizeof(int));
-    // regions[0] = 0;
-    // State *first = create_state(0, 1, regions);
-
-    // StateQueue *queue = (StateQueue *)malloc(sizeof(StateQueue));
-    // queue->top = NULL;
-
-    // push(queue, first);
-    // g->array[0].head->visited = 1;
     g->array->visiteds++;
 
     int stop = 0;
     int anterior = 0;
 
-    // distance_between_nodes(g, 0, 1);
-
     int *colors = (int *)calloc(((map->n_colors)+1), sizeof(int));
 
-    for (int c = 1; c <= map->n_colors; ++c)
-    {
-        printf("pintando com a cor: %d\n", c);
-
-        if (c == g->array[0].head->color)
-        {
-            continue;
-        }
-
-        int total_distance = 0;
-        for (int i = 1; i < g->num_v; ++i)
-        {
-            printf("Buscando região %d\n", i);
-            int atual_v_distance = g->num_e;
-            
-            for (int j = 0; j < g->num_v; ++j)
-            {
-                g->array[j].head->visited = 0;
-            }
-
-            StateQueue *lifo = (StateQueue *)malloc(sizeof(StateQueue));
-            lifo->top = NULL;
-
-            State *s = create_state(g->array[0].head->region, 0, g->array[0].head->color);
-            g->array[0].head->color = c;
-            s->distance = 0;
-            // g->array[0].head->visited = 1;
-
-            push(lifo, s);
-
-            while(lifo->top)
-            {
-                State *current = pop(lifo);
-                g->array[current->region].head->visited = 2;
-                printf("-----pop na regiao: %d\n", current->region);
-
-                if (current->region == i)
-                {   
-                    if (i == 4)
-                        printf("distancia 0 ao %d == %d\n", i, current->distance);
-                    if (current->distance < atual_v_distance)
-                    {
-                        atual_v_distance = current->distance;
-                    }
-                }
-
-                Vertice *aux = g->array[current->region].head->next;
-                // printf("vendo lista da regiao %d\n", current->region);
-                int distance;
-                int atual_color = g->array[current->region].head->color;
-                while(aux != NULL)
-                {
-                    distance = 0;
-                    if (g->array[aux->region].head->visited == 0)
-                    {
-                        printf("-> push em %d\n", aux->region);
-                        if(aux->color != atual_color)
-                        {
-                            distance = 1 + current->distance;
-                        }
-                        
-                        State *s = create_state(aux->region, 0, aux->color);
-                        g->array[aux->region].head->visited = 2;
-                        s->distance = distance;
-
-                        push(lifo, s);
-                    }
-                    aux = aux->next;
-                }
-                // g->array[current->region].head->visited = 0;
-            }
-            // printf("distancia 0 ao %d == %d\n", i, atual_v_distance);
-        }
-        colors[c] = total_distance;
-        break;
-    }
-
-    // int min_distance = map->rows*map->cols;
-    // int color = 0;
-    // for (int d = 1; d < (map->n_colors)+1; ++d)
+    // for (int c = 1; c <= map->n_colors; ++c)
     // {
-    //     if (colors[d] < min_distance)
+    //     // printf("pintando com a cor: %d\n", c);
+
+    //     if (c == g->array[0].head->first_color)
     //     {
-    //         min_distance = colors[d];
-    //         color = d;
+    //         colors[c] = -1;
+    //         continue;
     //     }
+
+        
+    //     colors[c] = distance_between_nodes(g, c);
+    //     // printf("cor %d distancia == %d\n", c, colors[c]);
     // }
 
-    // printf("para cor %d: %d\n", color, min_distance);
+    // int color = calculate_min_distance(map->rows*map->cols, map->n_colors, colors);
+
+    paint_graph(g, g->array[0].head, g->array[0].head->color, 1);
+    paint_graph(g, g->array[0].head, g->array[0].head->color, 2);
+    paint_graph(g, g->array[0].head, g->array[0].head->color, 1);
+    paint_graph(g, g->array[0].head, g->array[0].head->color, 3);
+
+    for (int i = 0; i < g->num_v; ++i)
+    {
+        printf("regiao %d cor == %d, ", g->array[i].head->region, g->array[i].head->color);
+    }
+    printf("\n");
+    // printf("menor distancia para a cor %d\n", color);
     // solution->colors[solution->steps++] = color;
 
-    // print_solution(solution);
+    print_solution(solution);
 
     return 0;
 }

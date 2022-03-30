@@ -10,7 +10,11 @@
         "string_view": "c",
         "initializer_list": "c",
         "utility": "c",
-        "iterator": "c"
+        "iterator": "c",
+        "deque": "c",
+        "string": "c",
+        "unordered_map": "c",
+        "vector": "c"
     },
     "C_Cpp.errorSquiggles": "Enabled"
 }

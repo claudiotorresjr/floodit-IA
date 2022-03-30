@@ -4,15 +4,71 @@
 #include "graph.h"
 #include "stack.h"
 #include "main.h"
+#include "doubleQueue.h"
 
-int distance_between_nodes(Graph *g, int from, int to)
+int distance_between_nodes(Graph *g, int c)
 {
+    int total_distance = 0;
+    for (int i = 1; i < g->num_v; ++i)
+    {
+        // printf("Buscando região %d\n", i);
+
+        DoubleQueue *deque = dq_create();
+
+        State *s = create_state(g->array[0].head->region, g->array[0].head->color);
+        g->array[0].head->color = c;
+        s->distance = 0;
         
-}
+        dq_insert_tail(deque, s);
 
-void initialize_array(int **colors, int size)
-{
+        while(!(dq_empty(deque)))
+        {
+            State *current = dq_remove_front(deque);
+            g->array[current->region].head->visited = 1;
+            // printf("-----removi a regiao: %d\n", current->region);
 
+            if (current->region == i)
+            {   
+                // printf("distancia 0 ao %d == %d\n", i, current->distance);
+                total_distance += current->distance;
+                break;
+            }
+
+            Vertice *aux = g->array[current->region].head->next;
+            // printf("vendo lista da regiao %d\n", current->region);
+            int distance;
+            int atual_color = g->array[current->region].head->color;
+            while(aux != NULL)
+            {
+                distance = 0;
+                if (!g->array[aux->region].head->visited)
+                {
+                    // printf("-> dq_insert_tail em %d\n", aux->region);
+                    if(aux->color != atual_color)
+                    {
+                        distance = 1 + current->distance;
+                    }
+                    
+                    State *s = create_state(aux->region, aux->color);
+                    s->distance = distance;
+                    // printf("distancia == %d\n", s->distance);
+
+                    dq_insert_tail(deque, s);
+                }
+                aux = aux->next;
+            }
+            // dq_show_list(deque);
+            // break;
+        }
+
+        for (int j = 0; j < g->num_v; ++j)
+        {
+            g->array[j].head->visited = 0;
+            g->array[j].head->color = g->array[j].head->first_color;
+        }
+    }
+
+    return total_distance;
 }
 
 Vertice *create_vertice(int size, int color, int region, int pos[2])
@@ -21,6 +77,7 @@ Vertice *create_vertice(int size, int color, int region, int pos[2])
 
     v->size = size;
     v->color = color;
+    v->first_color = color;
     v->region = region;
     v->visited = 0;
     v->pos[0] = pos[0];

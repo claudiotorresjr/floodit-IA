@@ -10,6 +10,7 @@ typedef struct Vertice
 {
     int size;
     int color;
+    int first_color;
     int region;
     int visited;
     int pos[2];
@@ -31,7 +32,7 @@ typedef struct Graph
     AdjList *array;
 } Graph;
 
-int distance_between_nodes(Graph *g, int from, int to);
+int distance_between_nodes(Graph *g, int c);
 void initialize_array(int **colors, int size);
 int *verify_max_color_count(Graph *g, State *current, int t_colors);
 Vertice *create_vertice(int size, int color, int region, int pos[2]);
