@@ -17,15 +17,15 @@ void reset_graph(Graph *g)
 
 int distance_between_nodes(Graph *g, int c)
 {
-    clock_t start, end;
-    double cpu_time_used;
-    start = clock();
+    //clock_t start, end;
+    //double cpu_time_used;
+    //start = clock();
 
     int total_distance = 0;
-    for (int i = 1; i < g->num_v; ++i)
-    {
+    //for (int i = 1; i < g->num_v; ++i)
+    //{
         // printf("Buscando região %d\n", i);
-
+        int i = 0;
         reset_graph(g);
 
         DoubleQueue *deque = dq_create();
@@ -41,12 +41,12 @@ int distance_between_nodes(Graph *g, int c)
 
             // printf("-----removi a regiao: %d\n", current->region);
 
-            if (current->region == i)
-            {   
-                // printf(" --> distancia 0 ao %d == %d\n", i, current->distance);
-                total_distance += current->distance;
-                break;
-            }
+            // if (current->region == i)
+            // {   
+            //     printf(" --> distancia 0 ao %d == %d\n", i, current->distance);
+            //    total_distance += current->distance;
+            //    i++;
+            // }
 
             Vertice *aux = g->array[current->region].head->next;
             // printf("vendo lista da regiao %d\n", current->region);
@@ -77,6 +77,8 @@ int distance_between_nodes(Graph *g, int c)
                     {
                         dq_insert_head(deque, aux->region, aux->color, distance);
                     }
+                    total_distance += distance;
+                    // printf(" --> distancia 0 ao %d == %d\n", aux->region, distance);
                     g->array[aux->region].head->visited = 2;
                 }
                 aux = aux->next;
@@ -86,11 +88,17 @@ int distance_between_nodes(Graph *g, int c)
             free(current);
             free(aux);
         }
+
+        // for (int i = 1; i < g->num_v; ++i)
+        // {
+        //     printf(" --> distancia 0 ao %d == %d\n", i, current->distance);
+        // }
+
         free(deque);
-    }
-    end = clock();
-    cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
-    printf("fun() took %f seconds to execute \n", cpu_time_used);
+
+    //end = clock();
+    //cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+    //printf("fun() took %f seconds to execute \n", cpu_time_used);
 
     return total_distance;
 }

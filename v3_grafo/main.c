@@ -326,24 +326,19 @@ int main(int argc, char const *argv[])
 
         for (int c = 1; c <= map->n_colors; ++c)
         {
-            // printf("pintando com a cor: %d, o %d (%d)\n", c, g->array[0].head->color, g->array[0].head->first_color);
-
             if (!color_is_in_region(g, g->array[0].head, g->array[0].head->color, c))
             {
                 colors[c] = -1;
                 reset_graph(g);
                 continue;
             }
+            // printf("pintando com a cor: %d, o %d (%d)\n", c, g->array[0].head->color, g->array[0].head->first_color);            
             reset_graph(g);
 
             paint_graph(&g, g->array[0].head, g->array[0].head->color, c, 0);
            
-            start = clock();
             colors[c] = distance_between_nodes(g, c);
-            end = clock();
-            cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
-            printf("fun() took %f seconds to execute \n", cpu_time_used);
-            // printf("cor %d distancia == %d\n", c, colors[c]);
+             // printf("cor %d distancia == %d\n", c, colors[c]);
 
             for (int j = 0; j < g->num_v; ++j)
             {
