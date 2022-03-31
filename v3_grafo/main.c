@@ -113,7 +113,7 @@ void paint_graph(Graph **g, Vertice *v, int base_color, int color, int change_co
 
         aux = aux->next;
     }
-    free(aux);
+    // free(aux);
 }
 
 int color_is_in_region(Graph *g, Vertice *v, int base_color, int color)
@@ -124,6 +124,7 @@ int color_is_in_region(Graph *g, Vertice *v, int base_color, int color)
     {
         if(aux->color == color)
         {
+            printf("tem o %d\n", aux->color);
             return 1;
         }
 
@@ -135,6 +136,7 @@ int color_is_in_region(Graph *g, Vertice *v, int base_color, int color)
         aux = aux->next;
     }
 
+    printf("Nao tem \n");
     return 0;
     
 }
@@ -310,6 +312,13 @@ int main(int argc, char const *argv[])
 
     free_map(map);
 
+    // paint_graph(&g, g->array[0].head, g->array[0].head->color, 15, 1);
+    // paint_graph(&g, g->array[0].head, g->array[0].head->color, 16, 1);
+    // paint_graph(&g, g->array[0].head, g->array[0].head->color, 17, 1);
+    // paint_graph(&g, g->array[0].head, g->array[0].head->color, 1, 1);
+
+    // color_is_in_region(g, g->array[0].head, g->array[0].head->color, 1);
+
     while (!is_solved(g))
     {
     
@@ -319,7 +328,7 @@ int main(int argc, char const *argv[])
         {
             printf("pintando com a cor: %d, o %d\n", c, g->array[0].head->color);
 
-            if (c == g->array[0].head->color && !color_is_in_region(g, g->array[0].head, g->array[0].head->color, c))
+            if (!color_is_in_region(g, g->array[0].head, g->array[0].head->color, c))
             {
                 colors[c] = -1;
                 continue;
@@ -338,12 +347,12 @@ int main(int argc, char const *argv[])
             }
         }
 
-        int color = calculate_min_distance(g->num_e, map->n_colors, colors);
+        int color = calculate_min_distance(999999, map->n_colors, colors);
+        printf(" --> menor distancia para a cor %d (%d)\n", color, colors[color]);
         free(colors);
-        // printf(" --> menor distancia para a cor %d\n", color);
 
         paint_graph(&g, g->array[0].head, g->array[0].head->color, color, 1);
-        g->array[0].head->first_color = g->array[0].head->color;
+        // g->array[0].head->first_color = g->array[0].head->color;
 
         // for (int j = 0; j < g->num_v; ++j)
         // {
@@ -359,7 +368,7 @@ int main(int argc, char const *argv[])
             // break;
         }
         stop++;
-        printf("%d\n", stop);
+        // printf("%d\n", stop);
     }
 
     print_solution(solution);
