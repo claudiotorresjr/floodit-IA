@@ -307,17 +307,7 @@ int main(int argc, char const *argv[])
 
     g->array->visiteds++;
 
-    int stop = 0;
-    int anterior = 0;
-
     free_map(map);
-
-    // paint_graph(&g, g->array[0].head, g->array[0].head->color, 15, 1);
-    // paint_graph(&g, g->array[0].head, g->array[0].head->color, 16, 1);
-    // paint_graph(&g, g->array[0].head, g->array[0].head->color, 17, 1);
-    // paint_graph(&g, g->array[0].head, g->array[0].head->color, 1, 1);
-
-    // color_is_in_region(g, g->array[0].head, g->array[0].head->color, 1);
 
     while (!is_solved(g))
     {
@@ -330,6 +320,7 @@ int main(int argc, char const *argv[])
             {
                 colors[c] = -1;
                 reset_graph(g);
+
                 continue;
             }
             // printf("pintando com a cor: %d, o %d (%d)\n", c, g->array[0].head->color, g->array[0].head->first_color);            
@@ -354,21 +345,9 @@ int main(int argc, char const *argv[])
         paint_graph(&g, g->array[0].head, g->array[0].head->color, color, 1);
         // g->array[0].head->first_color = g->array[0].head->color;
 
-        // for (int j = 0; j < g->num_v; ++j)
-        // {
-        //    printf("(%d - %d (%d)) ", g->array[j].head->region, g->array[j].head->color, g->array[j].head->first_color);
-        // }
-        // printf("\n");
         reset_graph(g);
 
         solution->colors[solution->steps++] = color;
-
-        if (stop == 8)
-        {
-            // break;
-        }
-        stop++;
-        // printf("%d\n", stop);
     }
 
     print_solution(solution);

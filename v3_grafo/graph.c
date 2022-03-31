@@ -22,79 +22,63 @@ int distance_between_nodes(Graph *g, int c)
     //start = clock();
 
     int total_distance = 0;
-    //for (int i = 1; i < g->num_v; ++i)
-    //{
-        // printf("Buscando região %d\n", i);
-        int i = 0;
-        reset_graph(g);
+    reset_graph(g);
 
-        DoubleQueue *deque = dq_create();
-        
-        dq_insert_head(deque, g->array[0].head->region, g->array[0].head->color, 0);
+    DoubleQueue *deque = dq_create();
+    
+    dq_insert_head(deque, g->array[0].head->region, g->array[0].head->color, 0);
 
-        while(!dq_empty(deque))
+    while(!dq_empty(deque))
+    {
+        State *current = dq_remove_head(deque);
+        g->array[current->region].head->visited = 1;
+
+        int current_region = g->array[current->region].head->region;
+
+        // printf("-----removi a regiao: %d\n", current->region);
+
+        Vertice *aux = g->array[current->region].head->next;
+        // printf("vendo lista da regiao %d\n", current->region);
+        int distance;
+        int atual_color = g->array[current->region].head->color;
+        while(aux != NULL)
         {
-            State *current = dq_remove_head(deque);
-            g->array[current->region].head->visited = 1;
-
-            int current_region = g->array[current->region].head->region;
-
-            // printf("-----removi a regiao: %d\n", current->region);
-
-            // if (current->region == i)
-            // {   
-            //     printf(" --> distancia 0 ao %d == %d\n", i, current->distance);
-            //    total_distance += current->distance;
-            //    i++;
-            // }
-
-            Vertice *aux = g->array[current->region].head->next;
-            // printf("vendo lista da regiao %d\n", current->region);
-            int distance;
-            int atual_color = g->array[current->region].head->color;
-            while(aux != NULL)
+            distance;
+            // printf("    item com reg %d (%d)\n", aux->region, g->array[aux->region].head->visited);
+            if (g->array[aux->region].head->visited == 0)
             {
-                distance;
-                // printf("    item com reg %d (%d)\n", aux->region, g->array[aux->region].head->visited);
-                if (g->array[aux->region].head->visited == 0)
+                if(aux->parent == current_region && g->array[aux->region].head->color == atual_color)
                 {
-                    if(aux->parent == current_region && g->array[aux->region].head->color == atual_color)
-                    {
-                        distance = 0;
-                    }
-                    else
-                    {
-                        distance = 1 + current->distance;
-                    }
-                    
-                    // printf("distancia pro %d == %d\n", aux->region, s->distance);
-
-                    if (distance)
-                    {
-                        dq_insert_tail(deque, aux->region, aux->color, distance);
-                    }
-                    else
-                    {
-                        dq_insert_head(deque, aux->region, aux->color, distance);
-                    }
-                    total_distance += distance;
-                    // printf(" --> distancia 0 ao %d == %d\n", aux->region, distance);
-                    g->array[aux->region].head->visited = 2;
+                    distance = 0;
                 }
-                aux = aux->next;
+                else
+                {
+                    distance = 1 + current->distance;
+                }
+                
+                // printf("distancia pro %d == %d\n", aux->region, s->distance);
+
+                if (distance)
+                {
+                    dq_insert_tail(deque, aux->region, aux->color, distance);
+                }
+                else
+                {
+                    dq_insert_head(deque, aux->region, aux->color, distance);
+                }
+                total_distance += distance;
+                // printf(" --> distancia 0 ao %d == %d\n", aux->region, distance);
+                g->array[aux->region].head->visited = 2;
             }
-           
-            
-            free(current);
-            free(aux);
+            aux = aux->next;
         }
+        
+        
+        free(current);
+        free(aux);
+    }
 
-        // for (int i = 1; i < g->num_v; ++i)
-        // {
-        //     printf(" --> distancia 0 ao %d == %d\n", i, current->distance);
-        // }
-
-        free(deque);
+    free(deque);
 
     //end = clock();
     //cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
