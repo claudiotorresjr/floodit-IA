@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 #include "graph.h"
 #include "stack.h"
@@ -16,6 +17,10 @@ void reset_graph(Graph *g)
 
 int distance_between_nodes(Graph *g, int c)
 {
+    clock_t start, end;
+    double cpu_time_used;
+    start = clock();
+
     int total_distance = 0;
     for (int i = 1; i < g->num_v; ++i)
     {
@@ -31,6 +36,9 @@ int distance_between_nodes(Graph *g, int c)
         {
             State *current = dq_remove_head(deque);
             g->array[current->region].head->visited = 1;
+
+            int current_region = g->array[current->region].head->region;
+
             // printf("-----removi a regiao: %d\n", current->region);
 
             if (current->region == i)
@@ -47,11 +55,10 @@ int distance_between_nodes(Graph *g, int c)
             while(aux != NULL)
             {
                 distance;
-
                 // printf("    item com reg %d (%d)\n", aux->region, g->array[aux->region].head->visited);
                 if (g->array[aux->region].head->visited == 0)
                 {
-                    if(aux->parent == g->array[current->region].head->region && g->array[aux->region].head->color == atual_color)
+                    if(aux->parent == current_region && g->array[aux->region].head->color == atual_color)
                     {
                         distance = 0;
                     }
@@ -64,25 +71,26 @@ int distance_between_nodes(Graph *g, int c)
 
                     if (distance)
                     {
-                        // printf("-> dq_insert_tail da reg %d\n", aux->region);
                         dq_insert_tail(deque, aux->region, aux->color, distance);
                     }
                     else
                     {
-                        // printf("-> dq_insert_head da reg %d\n", aux->region);
                         dq_insert_head(deque, aux->region, aux->color, distance);
                     }
                     g->array[aux->region].head->visited = 2;
                 }
                 aux = aux->next;
             }
+           
+            
             free(current);
             free(aux);
-            // dq_show_list(deque);
-            // break;
         }
         free(deque);
     }
+    end = clock();
+    cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+    printf("fun() took %f seconds to execute \n", cpu_time_used);
 
     return total_distance;
 }

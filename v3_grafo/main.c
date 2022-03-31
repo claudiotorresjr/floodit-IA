@@ -117,14 +117,14 @@ void paint_graph(Graph **g, Vertice *v, int base_color, int color, int change_co
 }
 
 int color_is_in_region(Graph *g, Vertice *v, int base_color, int color)
-{
+{    
     g->array[v->region].head->visited = 1;
     Vertice *aux = v->next;
     while (aux)
     {
         if(aux->color == color)
         {
-            printf("tem o %d\n", aux->color);
+            // printf("tem o %d\n", aux->color);
             return 1;
         }
 
@@ -136,7 +136,7 @@ int color_is_in_region(Graph *g, Vertice *v, int base_color, int color)
         aux = aux->next;
     }
 
-    printf("Nao tem \n");
+    // printf("Nao tem \n");
     return 0;
     
 }
@@ -326,19 +326,24 @@ int main(int argc, char const *argv[])
 
         for (int c = 1; c <= map->n_colors; ++c)
         {
-            printf("pintando com a cor: %d, o %d\n", c, g->array[0].head->color);
+            // printf("pintando com a cor: %d, o %d (%d)\n", c, g->array[0].head->color, g->array[0].head->first_color);
 
             if (!color_is_in_region(g, g->array[0].head, g->array[0].head->color, c))
             {
                 colors[c] = -1;
+                reset_graph(g);
                 continue;
             }
             reset_graph(g);
 
             paint_graph(&g, g->array[0].head, g->array[0].head->color, c, 0);
+           
+            start = clock();
             colors[c] = distance_between_nodes(g, c);
-
-            printf("cor %d distancia == %d\n", c, colors[c]);
+            end = clock();
+            cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+            printf("fun() took %f seconds to execute \n", cpu_time_used);
+            // printf("cor %d distancia == %d\n", c, colors[c]);
 
             for (int j = 0; j < g->num_v; ++j)
             {
@@ -348,7 +353,7 @@ int main(int argc, char const *argv[])
         }
 
         int color = calculate_min_distance(999999, map->n_colors, colors);
-        printf(" --> menor distancia para a cor %d (%d)\n", color, colors[color]);
+        // printf(" --> menor distancia para a cor %d (%d)\n", color, colors[color]);
         free(colors);
 
         paint_graph(&g, g->array[0].head, g->array[0].head->color, color, 1);
