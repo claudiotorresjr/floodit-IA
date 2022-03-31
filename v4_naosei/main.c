@@ -65,7 +65,7 @@ void show_matrix(Index **matrix, int rows, int cols)
     }
 }
 
-int isSolved(Index **m, int r, int c)
+int is_solved(Index **m, int r, int c)
 {
     int first_c = m[0][0].color;
     for (int i = 0; i < r; ++i)
@@ -305,7 +305,7 @@ int main(int argc, char const *argv[])
 
         // solution->colors[solution->steps++] = max_color[0];
         // paintOneColor(&map, map->rows, map->cols, 0, 0, map->map[0][0].color, max_color[0]);
-        // if (isSolved(map->map, map->rows, map->cols))
+        // if (is_solved(map->map, map->rows, map->cols))
         // {
         //     break;
         // }

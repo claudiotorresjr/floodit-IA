@@ -32,8 +32,11 @@ int dq_empty(DoubleQueue *queue)
     return 0;
 }
 
-void dq_insert_head(DoubleQueue *queue, State *s)
+void dq_insert_head(DoubleQueue *queue, int region, int color, int distance)
 {
+    State *s = create_state(region, color);
+    s->distance = distance;
+
     if (dq_empty(queue))
     {
         queue->head = s;
@@ -51,7 +54,7 @@ void dq_insert_head(DoubleQueue *queue, State *s)
     queue->size++;
 }
 
-State *dq_remove_front(DoubleQueue *queue)
+State *dq_remove_head(DoubleQueue *queue)
 {
     if (!queue->head)
     {
@@ -79,8 +82,11 @@ State *dq_remove_front(DoubleQueue *queue)
     
 }
 
-void dq_insert_tail(DoubleQueue *queue, State *s)
+void dq_insert_tail(DoubleQueue *queue, int region, int color, int distance)
 {
+    State *s = create_state(region, color);
+    s->distance = distance;
+
     if (dq_empty(queue))
     {
         queue->head = s;

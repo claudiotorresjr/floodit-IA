@@ -6,6 +6,14 @@
 #include "main.h"
 #include "doubleQueue.h"
 
+void reset_graph(Graph *g)
+{
+    for (int j = 0; j < g->num_v; ++j)
+    {
+        g->array[j].head->visited = 0;
+    }
+}
+
 int distance_between_nodes(Graph *g, int c)
 {
     int total_distance = 0;
@@ -13,23 +21,21 @@ int distance_between_nodes(Graph *g, int c)
     {
         // printf("Buscando região %d\n", i);
 
+        reset_graph(g);
+
         DoubleQueue *deque = dq_create();
-
-        State *s = create_state(g->array[0].head->region, g->array[0].head->color);
-        g->array[0].head->color = c;
-        s->distance = 0;
         
-        dq_insert_tail(deque, s);
+        dq_insert_head(deque, g->array[0].head->region, g->array[0].head->color, 0);
 
-        while(!(dq_empty(deque)))
+        while(!dq_empty(deque))
         {
-            State *current = dq_remove_front(deque);
+            State *current = dq_remove_head(deque);
             g->array[current->region].head->visited = 1;
             // printf("-----removi a regiao: %d\n", current->region);
 
             if (current->region == i)
             {   
-                // printf("distancia 0 ao %d == %d\n", i, current->distance);
+                // printf(" --> distancia 0 ao %d == %d\n", i, current->distance);
                 total_distance += current->distance;
                 break;
             }
@@ -40,38 +46,48 @@ int distance_between_nodes(Graph *g, int c)
             int atual_color = g->array[current->region].head->color;
             while(aux != NULL)
             {
-                distance = 0;
-                if (!g->array[aux->region].head->visited)
+                distance;
+
+                // printf("    item com reg %d (%d)\n", aux->region, g->array[aux->region].head->visited);
+                if (g->array[aux->region].head->visited == 0)
                 {
-                    // printf("-> dq_insert_tail em %d\n", aux->region);
-                    if(aux->color != atual_color)
+                    if(aux->parent == g->array[current->region].head->region && g->array[aux->region].head->color == atual_color)
+                    {
+                        distance = 0;
+                    }
+                    else
                     {
                         distance = 1 + current->distance;
                     }
                     
-                    State *s = create_state(aux->region, aux->color);
-                    s->distance = distance;
-                    // printf("distancia == %d\n", s->distance);
+                    // printf("distancia pro %d == %d\n", aux->region, s->distance);
 
-                    dq_insert_tail(deque, s);
+                    if (distance)
+                    {
+                        // printf("-> dq_insert_tail da reg %d\n", aux->region);
+                        dq_insert_tail(deque, aux->region, aux->color, distance);
+                    }
+                    else
+                    {
+                        // printf("-> dq_insert_head da reg %d\n", aux->region);
+                        dq_insert_head(deque, aux->region, aux->color, distance);
+                    }
+                    g->array[aux->region].head->visited = 2;
                 }
                 aux = aux->next;
             }
+            free(current);
+            free(aux);
             // dq_show_list(deque);
             // break;
         }
-
-        for (int j = 0; j < g->num_v; ++j)
-        {
-            g->array[j].head->visited = 0;
-            g->array[j].head->color = g->array[j].head->first_color;
-        }
+        free(deque);
     }
 
     return total_distance;
 }
 
-Vertice *create_vertice(int size, int color, int region, int pos[2])
+Vertice *create_vertice(int size, int color, int region, int parent, int pos[2])
 {
     Vertice *v = (Vertice *)malloc(sizeof(Vertice));
 
@@ -80,6 +96,7 @@ Vertice *create_vertice(int size, int color, int region, int pos[2])
     v->first_color = color;
     v->region = region;
     v->visited = 0;
+    v->parent = parent;
     v->pos[0] = pos[0];
     v->pos[1] = pos[1];
     v->next = NULL;
@@ -128,7 +145,7 @@ void add_edge(Graph *g, int a, int color_a, int size_a, int b, int color_b, int 
     {
         // printf("criando vertice a = %d\n", a);
         g->num_v++;
-        vertice = create_vertice(size_a, color_a, a, pos);
+        vertice = create_vertice(size_a, color_a, a, a, pos);
         g->array[a].head = vertice;
 
         found = 1;
@@ -137,7 +154,7 @@ void add_edge(Graph *g, int a, int color_a, int size_a, int b, int color_b, int 
     {
         // printf("criando vertice b = %d e colocando no a = %d\n", b, a);
         g->array[a].head->size = size_a;
-        vertice = create_vertice(size_b, color_b, b, pos);
+        vertice = create_vertice(size_b, color_b, b, a, pos);
         Vertice *aux = g->array[a].head;
         while (aux->next)
         {
@@ -169,6 +186,35 @@ Graph *create_graph(int size)
     g->array->visiteds = 0;
     
     return g;
+}
+
+void free_vertices_list(AdjList *l)
+{
+    //libero todos os nos da lista encadeada
+	if(!l->head)
+	{
+		return;
+	}
+
+	Vertice *aux = l->head;
+	l->head = l->head->next;
+	while(l->head)
+	{	
+		free(aux);
+		aux = l->head;
+		l->head = l->head->next;
+	}
+	free(aux);	
+}
+
+void free_graph(Graph *g)
+{
+    for (int i = 0; i < g->num_v; ++i)
+    { 
+        free_vertices_list(&g->array[i]);    
+    }
+    free(g->array);
+    free(g);
 }
 
 void show_graph(Graph *g)

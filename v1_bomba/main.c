@@ -34,7 +34,7 @@ void show_matrix(int **matrix, int rows, int cols)
     }
 }
 
-int isSolved(Map *m)
+int is_solved(Map *m)
 {
     // show_matrix(m, lin, col);
     int first_c = m->map[0][0];
@@ -153,7 +153,7 @@ int main(int argc, char const *argv[])
 
             // printf("pintando com a cor %d\n", i);
             paintOneColor(&next->map, 0, 0, next->map->map[0][0], i);
-            if (isSolved(next->map))
+            if (is_solved(next->map))
             {
                 // printf("Solucionado :D\n");
                 print_moves(next->moves);

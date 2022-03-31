@@ -17,9 +17,9 @@ typedef struct DoubleQueue
 DoubleQueue *dq_create();
 void dq_show_list(DoubleQueue *queue);
 int dq_empty(DoubleQueue *queue);
-void dq_insert_head(DoubleQueue *queue, State *s);
-State *dq_remove_front(DoubleQueue *queue);
-void dq_insert_tail(DoubleQueue *queue, State *s);
+void dq_insert_head(DoubleQueue *queue, int region, int color, int distance);
+State *dq_remove_head(DoubleQueue *queue);
+void dq_insert_tail(DoubleQueue *queue, int region, int color, int distance);
 State *dq_remove_tail(DoubleQueue *queue);
 
 #endif

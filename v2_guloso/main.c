@@ -36,7 +36,7 @@ void show_matrix(int **matrix, int rows, int cols)
     }
 }
 
-int isSolved(int **m, int r, int c)
+int is_solved(int **m, int r, int c)
 {
     int first_c = m[0][0];
     for (int i = 0; i < r; ++i)
@@ -161,7 +161,7 @@ int main(int argc, char const *argv[])
             total = 0;
             paintOneColor(&m_aux, map->rows, map->cols, 0, 0, m_aux[0][0], i);
             frontier(&m_aux, map->rows, map->cols, 0, 0, m_aux[0][0]);
-            if (isSolved(m_aux, map->rows, map->cols))
+            if (is_solved(m_aux, map->rows, map->cols))
             {
                 solution->colors[solution->steps++] = i;
                 print_solution(solution);

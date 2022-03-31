@@ -66,38 +66,76 @@ void show_matrix(Index **matrix, int rows, int cols)
     }
 }
 
-int isSolved(Index **m, int r, int c)
+void free_map(Map *m)
 {
-    int first_c = m[0][0].color;
-    for (int i = 0; i < r; ++i)
+    for(int i = 0; i < m->rows; ++i)
     {
-        for (int j = 0; j < c; ++j)
+        free(m->map[i]);
+    }
+    free(m->map);
+    // free(m);
+}
+
+int is_solved(Graph *g)
+{
+    int color = g->array[0].head->color;
+    for (int i = 1; i < g->num_v; ++i)
+    {
+        if (g->array[i].head->color != color)
         {
-            if (m[i][j].color != first_c)
-            {
-                return 0;
-            }
+            return 0;
         }
     }
 
-    return 1;    
+    return 1;
 }
 
-void paint_graph(Graph *g, Vertice *v, int base_color, int color)
+void paint_graph(Graph **g, Vertice *v, int base_color, int color, int change_color)
 {
-    g->array[v->region].head->visited = 1;
-    g->array[v->region].head->color = color;
+    // printf("pintando a reg: %d com cor %d\n", v->region, color);
+    (*g)->array[v->region].head->visited = 1;
+    (*g)->array[v->region].head->color = color;
+
+    if (change_color)
+    {
+        (*g)->array[v->region].head->first_color = color;
+    }
 
     Vertice *aux = v->next;
     while (aux)
     {
-        if (aux->color == base_color && !g->array[aux->region].head->visited)
+        // printf("---- verificando a reg: %d (%d) - %d == cor base %d\n", aux->region, aux->color, (*g)->array[aux->region].head->visited, base_color);
+        if ((*g)->array[aux->region].head->color == base_color && !(*g)->array[aux->region].head->visited)
         {
-            paint_graph(g, g->array[aux->region].head, base_color, color);
+            // printf("->> tem cor %d\n", base_color);
+            paint_graph(g, (*g)->array[aux->region].head, base_color, color, change_color);
         }
 
         aux = aux->next;
     }
+    free(aux);
+}
+
+int color_is_in_region(Graph *g, Vertice *v, int base_color, int color)
+{
+    g->array[v->region].head->visited = 1;
+    Vertice *aux = v->next;
+    while (aux)
+    {
+        if(aux->color == color)
+        {
+            return 1;
+        }
+
+        if (g->array[aux->region].head->color == base_color && !g->array[aux->region].head->visited)
+        {
+            return color_is_in_region(g, g->array[aux->region].head, base_color, color);
+        }
+
+        aux = aux->next;
+    }
+
+    return 0;
     
 }
 
@@ -196,7 +234,7 @@ int calculate_min_distance(int size, int n_colors, int *colors)
 {
     int min_distance = size;
     int color = 0;
-    for (int d = 1; d < (n_colors)+1; ++d)
+    for (int d = 1; d < n_colors+1; ++d)
     {
         if (colors[d] < min_distance && colors[d] != -1)
         {
@@ -270,39 +308,66 @@ int main(int argc, char const *argv[])
     int stop = 0;
     int anterior = 0;
 
-    int *colors = (int *)calloc(((map->n_colors)+1), sizeof(int));
+    free_map(map);
 
-    // for (int c = 1; c <= map->n_colors; ++c)
-    // {
-    //     // printf("pintando com a cor: %d\n", c);
-
-    //     if (c == g->array[0].head->first_color)
-    //     {
-    //         colors[c] = -1;
-    //         continue;
-    //     }
-
-        
-    //     colors[c] = distance_between_nodes(g, c);
-    //     // printf("cor %d distancia == %d\n", c, colors[c]);
-    // }
-
-    // int color = calculate_min_distance(map->rows*map->cols, map->n_colors, colors);
-
-    paint_graph(g, g->array[0].head, g->array[0].head->color, 1);
-    paint_graph(g, g->array[0].head, g->array[0].head->color, 2);
-    paint_graph(g, g->array[0].head, g->array[0].head->color, 1);
-    paint_graph(g, g->array[0].head, g->array[0].head->color, 3);
-
-    for (int i = 0; i < g->num_v; ++i)
+    while (!is_solved(g))
     {
-        printf("regiao %d cor == %d, ", g->array[i].head->region, g->array[i].head->color);
+    
+        int *colors = (int *)calloc(((map->n_colors)+1), sizeof(int));
+
+        for (int c = 1; c <= map->n_colors; ++c)
+        {
+            printf("pintando com a cor: %d, o %d\n", c, g->array[0].head->color);
+
+            if (c == g->array[0].head->color && !color_is_in_region(g, g->array[0].head, g->array[0].head->color, c))
+            {
+                colors[c] = -1;
+                continue;
+            }
+            reset_graph(g);
+
+            paint_graph(&g, g->array[0].head, g->array[0].head->color, c, 0);
+            colors[c] = distance_between_nodes(g, c);
+
+            printf("cor %d distancia == %d\n", c, colors[c]);
+
+            for (int j = 0; j < g->num_v; ++j)
+            {
+                g->array[j].head->color = g->array[j].head->first_color;
+                g->array[j].head->visited = 0;
+            }
+        }
+
+        int color = calculate_min_distance(g->num_e, map->n_colors, colors);
+        free(colors);
+        // printf(" --> menor distancia para a cor %d\n", color);
+
+        paint_graph(&g, g->array[0].head, g->array[0].head->color, color, 1);
+        g->array[0].head->first_color = g->array[0].head->color;
+
+        // for (int j = 0; j < g->num_v; ++j)
+        // {
+        //    printf("(%d - %d (%d)) ", g->array[j].head->region, g->array[j].head->color, g->array[j].head->first_color);
+        // }
+        // printf("\n");
+        reset_graph(g);
+
+        solution->colors[solution->steps++] = color;
+
+        if (stop == 8)
+        {
+            // break;
+        }
+        stop++;
+        printf("%d\n", stop);
     }
-    printf("\n");
-    // printf("menor distancia para a cor %d\n", color);
-    // solution->colors[solution->steps++] = color;
 
     print_solution(solution);
+
+    free_graph(g);
+    free(solution->colors);
+    free(solution);
+    free(map);
 
     return 0;
 }

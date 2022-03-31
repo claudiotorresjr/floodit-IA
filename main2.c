@@ -34,7 +34,7 @@ void show_matrix(int **matrix, int rows, int cols)
     }
 }
 
-int isSolved(Map *m)
+int is_solved(Map *m)
 {
     // show_matrix(m, lin, col);
     int first_c = m->map[0][0];
