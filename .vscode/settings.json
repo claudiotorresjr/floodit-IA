@@ -14,7 +14,8 @@
         "deque": "c",
         "string": "c",
         "unordered_map": "c",
-        "vector": "c"
+        "vector": "c",
+        "tuple": "c"
     },
     "C_Cpp.errorSquiggles": "Enabled"
 }

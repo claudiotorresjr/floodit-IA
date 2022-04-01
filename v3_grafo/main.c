@@ -334,8 +334,8 @@ int main(int argc, char const *argv[])
     merge_nodes(g, 0, g->array[0].head->color);
     reset_graph(g);
     
-    // show_graph(g);
-    // printf("#################################################\n");
+    show_graph(g);
+    printf("#################################################\n");
 
     // paint_graph(&g, g->array[0].head, g->array[0].head->color, 1, 1);
     // merge_nodes(g, 0, g->array[0].head->color);
