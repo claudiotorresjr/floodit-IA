@@ -169,8 +169,8 @@ int main(int argc, char const *argv[])
 
                 return 0;
             }
-            // frontier[f_pos]->distance = count_color_region(m_aux, map->rows, map->cols);
-            frontier[f_pos]->distance = total;
+            frontier[f_pos]->distance = count_color_region(m_aux, map->rows, map->cols);
+            // frontier[f_pos]->distance = total;
             
             f_pos++;
         }

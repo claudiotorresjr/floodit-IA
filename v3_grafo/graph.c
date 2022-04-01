@@ -15,19 +15,24 @@ void remove_node_from_list(Vertice *head, int region)
     {
         if (v->region == region)
         {
-            v->next->prev = v->prev;
+            if (v->next)
+            {
+                v->next->prev = v->prev;
+            }
             v->prev->next = v->next;
 
             free(v);
 
             break;
         }
+
+        v = v->next;
     }
 }
 
 void merge_nodes(Graph *g, int region, int color)
 {   
-    // printf("-> iniciando com a regiao %d\n", region);
+    printf("-> iniciando com a regiao %d\n", region);
     g->array[region].head->visited = 1;
     Vertice *aux = g->array[region].head->next;
     while (aux)
@@ -55,7 +60,8 @@ void merge_nodes(Graph *g, int region, int color)
                         g->array[child->region].head->pos
                     );
 
-                    remove_node_from_list(g->array[child->region].head, region);
+                    printf("Removendo da reg %d o nodo %d\n", g->array[child->region].head->region, aux->region);
+                    remove_node_from_list(g->array[child->region].head, aux->region);
                 }
                 g->array[child->region].head->visited = 1;
                 
@@ -266,13 +272,6 @@ void add_edge(Graph *g, int a, int color_a, int size_a, int b, int color_b, int 
         aux->next = vertice;
 
         g->array[a].tail = vertice;
-        // Vertice *aux = g->array[a].head;
-        // while (aux->next)
-        // {
-        //     aux = aux->next;
-        // }
-
-        // aux->next = vertice;
         found = 1;
     }
 
