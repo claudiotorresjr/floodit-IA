@@ -15,6 +15,7 @@ typedef struct Vertice
     int visited;
     int parent;
     int pos[2];
+    struct Vertice *prev;
     struct Vertice *next;
 } Vertice;
 
@@ -22,7 +23,7 @@ typedef struct AdjList
 {
     int visiteds;
 	Vertice *head;
-	//struct _vertice *tail;
+	Vertice *tail;
 
 } AdjList;
 

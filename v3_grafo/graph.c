@@ -20,29 +20,61 @@ void merge_nodes(Graph *g, int region, int color)
             // printf("    --> eh igual\n");
             merge_nodes(g, aux->region, color);
             Vertice *child = g->array[aux->region].head->next;
-            // printf("        --> vendo filhos da regiao %d\n", aux->region);
+            printf("        --> vendo filhos da regiao %d\n", aux->region);
             while (child)
             {
-                if(child->color != color && !g->array[child->region].head->visited)
+                if(g->array[child->region].head->color != color && !g->array[child->region].head->visited)
                 {
-                    // printf("        --> regiao %d diferente\n", child->region);
-                    Vertice *v = child;
-                    g->array[aux->region].head = child->next;
+                    printf("        --> regiao %d diferente\n", child->region);
                     add_edge(
                         g,
                         0,
                         color,
                         g->array[0].head->size++,
-                        child->region,
-                        child->color,
-                        child->size,
-                        child->pos
+                        g->array[child->region].head->region,
+                        g->array[child->region].head->color,
+                        g->array[child->region].head->size,
+                        g->array[child->region].head->pos
                     );
-
-                    free(child);
                 }
+                
+                Vertice *v = g->array[aux->region].head;
+                g->array[aux->region].head = v->next;
+
+                if (g->array[aux->region].head)
+                {
+                    g->array[aux->region].head->prev = NULL;
+                }
+                else
+                {
+                    g->array[aux->region].tail = NULL;
+                }
+
+                v->next = NULL;
+                v->prev = NULL;
+
+                free(v);
+
                 child = child->next;
             }
+            
+            g->array[region].head = aux->next;
+
+            if (g->array[region].head)
+            {
+                g->array[region].head->prev = NULL;
+            }
+            else
+            {
+                g->array[region].tail = NULL;
+            }
+
+            aux->next = NULL;
+            aux->prev = NULL;
+
+            free(aux);
+            // printf("free na regiao %d\n", aux->region);
+            // free(g->array[aux->region].head);
         }
         aux = aux->next;
     }
@@ -188,6 +220,7 @@ void add_edge(Graph *g, int a, int color_a, int size_a, int b, int color_b, int 
         g->num_v++;
         vertice = create_vertice(size_a, color_a, a, a, pos);
         g->array[a].head = vertice;
+        g->array[a].tail = vertice;
 
         found = 1;
     }
@@ -196,13 +229,19 @@ void add_edge(Graph *g, int a, int color_a, int size_a, int b, int color_b, int 
         // printf("criando vertice b = %d e colocando no a = %d\n", b, a);
         g->array[a].head->size = size_a;
         vertice = create_vertice(size_b, color_b, b, a, pos);
-        Vertice *aux = g->array[a].head;
-        while (aux->next)
-        {
-            aux = aux->next;
-        }
-
+        
+        Vertice *aux = g->array[a].tail;
+        vertice->prev = aux;
         aux->next = vertice;
+
+        g->array[a].tail = vertice;
+        // Vertice *aux = g->array[a].head;
+        // while (aux->next)
+        // {
+        //     aux = aux->next;
+        // }
+
+        // aux->next = vertice;
         found = 1;
     }
 
@@ -222,6 +261,7 @@ Graph *create_graph(int size)
     for (int i = 0; i < size; ++i)
     {
         g->array[i].head = NULL;
+        g->array[i].tail = NULL;
     }
 
     g->array->visiteds = 0;
