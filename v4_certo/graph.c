@@ -7,47 +7,6 @@
 #include "main.h"
 #include "doubleQueue.h"
 
-void merge_nodes(Graph *g, int region, int color)
-{   
-    // printf("iniciando com a regiao %d\n", region);
-    g->array[region].head->visited = 1;
-    Vertice *aux = g->array[region].head->next;
-    while (aux)
-    {
-        // printf(" --> verificando cor da regiao %d\n", aux->region);
-        if(aux->color == color && !g->array[aux->region].head->visited)
-        {
-            // printf("    --> eh igual\n");
-            merge_nodes(g, aux->region, color);
-            Vertice *child = g->array[aux->region].head->next;
-            // printf("        --> vendo filhos da regiao %d\n", aux->region);
-            while (child)
-            {
-                if(child->color != color && !g->array[child->region].head->visited)
-                {
-                    // printf("        --> regiao %d diferente\n", child->region);
-                    Vertice *v = child;
-                    g->array[aux->region].head = child->next;
-                    add_edge(
-                        g,
-                        0,
-                        color,
-                        g->array[0].head->size++,
-                        child->region,
-                        child->color,
-                        child->size,
-                        child->pos
-                    );
-
-                    free(child);
-                }
-                child = child->next;
-            }
-        }
-        aux = aux->next;
-    }
-}
-
 void reset_graph(Graph *g)
 {
     for (int j = 0; j < g->num_v; ++j)

@@ -33,6 +33,7 @@ typedef struct Graph
     AdjList *array;
 } Graph;
 
+void merge_nodes(Graph *g, int region, int color);
 void reset_graph(Graph *g);
 int distance_between_nodes(Graph *g, int c);
 void initialize_array(int **colors, int size);

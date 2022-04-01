@@ -95,19 +95,19 @@ int count_color_region(int **m, int rows, int cols)
     return total;
 }
 
-void frontier(int ***m, int rows, int cols, int l, int c, int atual_color)
+void frontier_calc(int ***m, int rows, int cols, int l, int c, int atual_color)
 {
     if ((*m)[l][c] == atual_color)
     {
         total++;
         if ( rows - 1 > l )
-            frontier(m, rows, cols, l + 1, c, atual_color);
+            frontier_calc(m, rows, cols, l + 1, c, atual_color);
         if ( cols - 1 > c )
-            frontier(m, rows, cols, l, c + 1, atual_color);
+            frontier_calc(m, rows, cols, l, c + 1, atual_color);
         if ( l > 0 )
-            frontier(m, rows, cols, l - 1, c, atual_color);
+            frontier_calc(m, rows, cols, l - 1, c, atual_color);
         if ( c > 0 )
-            frontier(m, rows, cols, l, c - 1, atual_color);
+            frontier_calc(m, rows, cols, l, c - 1, atual_color);
     }
 }
 
@@ -156,11 +156,12 @@ int main(int argc, char const *argv[])
             if (i == current_c)
             {
                 // printf("Nao pinte com a cor %paintOneColor
+                continue;
             }
             int **m_aux = copy_matrix(map);
             total = 0;
             paintOneColor(&m_aux, map->rows, map->cols, 0, 0, m_aux[0][0], i);
-            frontier(&m_aux, map->rows, map->cols, 0, 0, m_aux[0][0]);
+            frontier_calc(&m_aux, map->rows, map->cols, 0, 0, m_aux[0][0]);
             if (is_solved(m_aux, map->rows, map->cols))
             {
                 solution->colors[solution->steps++] = i;

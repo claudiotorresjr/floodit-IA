@@ -6,6 +6,7 @@
 #include "main.h"
 #include "graph.h"
 #include "stack.h"
+#include "doubleQueue.h"
 
 int total;
 int atual_region = 0;
@@ -65,42 +66,79 @@ void show_matrix(Index **matrix, int rows, int cols)
     }
 }
 
-int is_solved(Index **m, int r, int c)
+void free_map(Map *m)
 {
-    int first_c = m[0][0].color;
-    for (int i = 0; i < r; ++i)
+    for(int i = 0; i < m->rows; ++i)
     {
-        for (int j = 0; j < c; ++j)
+        free(m->map[i]);
+    }
+    free(m->map);
+    // free(m);
+}
+
+int is_solved(Graph *g)
+{
+    int color = g->array[0].head->color;
+    for (int i = 1; i < g->num_v; ++i)
+    {
+        if (g->array[i].head->color != color)
         {
-            if (m[i][j].color != first_c)
-            {
-                return 0;
-            }
+            return 0;
         }
     }
 
-    return 1;    
+    return 1;
 }
 
-void paintOneColor(Map **m, int rows, int cols, int r, int c, int init_c, int color)
+void paint_graph(Graph **g, Vertice *v, int base_color, int color, int change_color)
 {
-    (*m)->map[r][c].color = color;
-    if (rows - 1 > r && (*m)->map[r + 1][c].color == init_c)
+    // printf("pintando a reg: %d com cor %d\n", v->region, color);
+    (*g)->array[v->region].head->visited = 1;
+    (*g)->array[v->region].head->color = color;
+
+    if (change_color)
     {
-        paintOneColor(m, rows, cols, r + 1, c, init_c, color);
+        (*g)->array[v->region].head->first_color = color;
     }
-    if (cols - 1 > c && (*m)->map[r][c + 1].color == init_c)
+
+    Vertice *aux = v->next;
+    while (aux)
     {
-        paintOneColor(m, rows, cols, r, c + 1, init_c, color);
+        // printf("---- verificando a reg: %d (%d) - %d == cor base %d\n", aux->region, aux->color, (*g)->array[aux->region].head->visited, base_color);
+        if ((*g)->array[aux->region].head->color == base_color && !(*g)->array[aux->region].head->visited)
+        {
+            // printf("->> tem cor %d\n", base_color);
+            paint_graph(g, (*g)->array[aux->region].head, base_color, color, change_color);
+        }
+
+        aux = aux->next;
     }
-    if (r > 0 && (*m)->map[r - 1][c].color == init_c)
+    // free(aux);
+}
+
+int color_is_in_region(Graph *g, Vertice *v, int base_color, int color)
+{    
+    g->array[v->region].head->visited = 1;
+    Vertice *aux = v->next;
+    while (aux)
     {
-        paintOneColor(m, rows, cols, r - 1, c, init_c, color);
+        if(aux->color == color)
+        {
+            // printf("tem o %d\n", aux->color);
+            return 1;
+        }
+
+        if (g->array[aux->region].head->color == base_color && !g->array[aux->region].head->visited)
+        {
+            return color_is_in_region(g, g->array[aux->region].head, base_color, color);
+        }
+
+        aux = aux->next;
     }
-    if (c > 0 && (*m)->map[r][c - 1].color == init_c)
-    {
-        paintOneColor(m, rows, cols, r, c - 1, init_c, color);
-    }
+
+    // printf("Nao tem \n");
+    return 0;
+    
 }
 
 void frontier(Map **m, int l, int c, int atual_color, int region, Graph *g)
@@ -194,6 +232,22 @@ void print_solution(Solution *s)
     printf("\n");
 }
 
+int calculate_min_distance(int size, int n_colors, int *colors)
+{
+    int min_distance = size;
+    int color = 0;
+    for (int d = 1; d < n_colors+1; ++d)
+    {
+        if (colors[d] < min_distance && colors[d] != -1)
+        {
+            min_distance = colors[d];
+            color = d;
+        }
+    }
+
+    return color;
+}
+
 int main(int argc, char const *argv[])
 {
     clock_t start, end;
@@ -251,105 +305,57 @@ int main(int argc, char const *argv[])
     solution->steps = 0;
     solution->colors = (int *)malloc(map->rows*map->cols*sizeof(int));
 
-    int *regions = (int *)malloc((1)*sizeof(int));
-    regions[0] = 0;
-    State *first = create_state(0, 1, regions);
-
-    StateQueue *queue = (StateQueue *)malloc(sizeof(StateQueue));
-    queue->top = NULL;
-
-    push(queue, first);
-    // g->array[0].head->visited = 1;
     g->array->visiteds++;
 
-    int stop = 0;
-    int anterior = 0;
+    free_map(map);
 
-    distance_between_nodes(g, 0, 1);
-
-    Vertice *aux = g->array[0].head->next;
-    while(aux != NULL)
+    while (!is_solved(g))
     {
-        State *s = create_state(aux->region, 0, NULL);
-        push(queue, s);
-        aux = aux->next;
-    }
+    
+        int *colors = (int *)calloc(((map->n_colors)+1), sizeof(int));
 
-    for (int i = 0; i < g->num_v; ++i)
-    {
-        // start = clock();
-        Vertice *aux = g->array[i].head->next;
-        // printf("indice da lista: %d\n", i);
-        while(aux != NULL)
+        for (int c = 1; c <= map->n_colors; ++c)
         {
-            
-            aux = aux->next;
+            if (!color_is_in_region(g, g->array[0].head, g->array[0].head->color, c))
+            {
+                colors[c] = -1;
+                reset_graph(g);
+
+                continue;
+            }
+            // printf("pintando com a cor: %d, o %d (%d)\n", c, g->array[0].head->color, g->array[0].head->first_color);            
+            reset_graph(g);
+
+            paint_graph(&g, g->array[0].head, g->array[0].head->color, c, 0);
+           
+            colors[c] = distance_between_nodes(g, c);
+             // printf("cor %d distancia == %d\n", c, colors[c]);
+
+            for (int j = 0; j < g->num_v; ++j)
+            {
+                g->array[j].head->color = g->array[j].head->first_color;
+                g->array[j].head->visited = 0;
+            }
         }
-        // end = clock();
-        // cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
-        // printf("fun() took %f seconds to execute \n", cpu_time_used);
+
+        int color = calculate_min_distance(999999, map->n_colors, colors);
+        // printf(" --> menor distancia para a cor %d (%d)\n", color, colors[color]);
+        free(colors);
+
+        paint_graph(&g, g->array[0].head, g->array[0].head->color, color, 1);
+        // g->array[0].head->first_color = g->array[0].head->color;
+
+        reset_graph(g);
+
+        solution->colors[solution->steps++] = color;
     }
-    //while (queue->top)
-    //{
-    //    State *current = pop(queue);
 
-        // printf("%d %d\n", g->array->visiteds, g->num_v);
-        // if (g->array->visiteds == g->num_v)
-        // {
-        //     break;
-        // }
+    print_solution(solution);
 
-        // int *max_color;
-        // max_color = verify_max_color_count(g, current, map->n_colors);
-        // printf("size: %d cor maior: %d: qtd cor maior: %d\n", current->size, max_color[0], max_color[1]);
-
-        // solution->colors[solution->steps++] = max_color[0];
-        // paintOneColor(&map, map->rows, map->cols, 0, 0, map->map[0][0].color, max_color[0]);
-        // if (is_solved(map->map, map->rows, map->cols))
-        // {
-        //     break;
-        // }
-        // show_matrix(map->map, map->rows, map->cols);
-        // printf("------------------\n");
-
-        // int j = 0;
-        // int *regions = (int *)malloc((g->num_v)*sizeof(int));
-        // for (int i = 0; i < current->size; ++i)
-        // {
-        //     int v = current->regions[i];
-        //     Vertice *aux = g->array[v].head->next;
-        //     while(aux != NULL)
-        //     {
-        //         if (aux->color == max_color[0] && !g->array[aux->region].head->visited)
-        //         {   
-        //             g->array[aux->region].head->visited = 1;
-        //             g->array->visiteds++;
-        //             regions[j] = aux->region;
-        //             j++;
-        //         }
-        //         aux = aux->next;
-        //     }
-        // }
-
-        // for (int i = 0; i < j; ++i)
-        // {
-        //     printf("%d ", regions[i]);
-        // }
-        // printf("\n");
-        
-        // regions = (int *)realloc(regions, j);
-        // State *s = create_state(current->parent, j, regions);
-        
-        // push(queue, s);
-
-        // stop++;
-        // if (stop == 3)
-        // {
-        //     printf("%d %d\n", g->array->visiteds, j);
-        //     break;
-        // }
-    //}
-    //print_solution(solution);
+    free_graph(g);
+    free(solution->colors);
+    free(solution);
+    free(map);
 
     return 0;
 }
