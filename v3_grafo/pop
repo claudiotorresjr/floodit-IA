@@ -1,0 +1,149 @@
+---- lista adj----
+PAI 0: region 0 (pos = 1-0, cor = 2, quantidade = 3)
+region 1 (pos = 1-0, cor = 1, quantidade = 1)
+region 2 (pos = 2-1, cor = 3, quantidade = 1)
+region 3 (pos = 1-2, cor = 1, quantidade = 3)
+------------------------
+PAI 1: region 1 (pos = 2-0, cor = 1, quantidade = 1)
+region 4 (pos = 2-0, cor = 2, quantidade = 1)
+region 0 (pos = 1-1, cor = 2, quantidade = 3)
+------------------------
+PAI 2: region 2 (pos = 3-1, cor = 3, quantidade = 1)
+region 5 (pos = 3-1, cor = 2, quantidade = 2)
+region 3 (pos = 2-2, cor = 1, quantidade = 3)
+region 0 (pos = 1-1, cor = 2, quantidade = 3)
+region 4 (pos = 2-0, cor = 2, quantidade = 1)
+------------------------
+PAI 3: region 3 (pos = 3-2, cor = 1, quantidade = 3)
+region 5 (pos = 3-2, cor = 2, quantidade = 2)
+region 6 (pos = 2-3, cor = 3, quantidade = 1)
+region 2 (pos = 2-1, cor = 3, quantidade = 1)
+region 7 (pos = 1-3, cor = 2, quantidade = 3)
+region 0 (pos = 0-1, cor = 2, quantidade = 3)
+------------------------
+PAI 4: region 4 (pos = 3-0, cor = 2, quantidade = 1)
+region 8 (pos = 3-0, cor = 3, quantidade = 1)
+region 2 (pos = 2-1, cor = 3, quantidade = 1)
+region 1 (pos = 1-0, cor = 1, quantidade = 1)
+------------------------
+PAI 5: region 5 (pos = 3-3, cor = 2, quantidade = 2)
+region 9 (pos = 3-3, cor = 1, quantidade = 3)
+region 3 (pos = 2-2, cor = 1, quantidade = 3)
+region 2 (pos = 2-1, cor = 3, quantidade = 1)
+region 8 (pos = 3-0, cor = 3, quantidade = 1)
+------------------------
+PAI 6: region 6 (pos = 3-3, cor = 3, quantidade = 1)
+region 9 (pos = 3-3, cor = 1, quantidade = 3)
+region 7 (pos = 1-3, cor = 2, quantidade = 3)
+region 3 (pos = 2-2, cor = 1, quantidade = 3)
+------------------------
+PAI 7: region 7 (pos = 2-3, cor = 2, quantidade = 3)
+region 6 (pos = 2-3, cor = 3, quantidade = 1)
+region 9 (pos = 2-4, cor = 1, quantidade = 3)
+region 10 (pos = 0-4, cor = 3, quantidade = 1)
+region 3 (pos = 0-2, cor = 1, quantidade = 3)
+------------------------
+PAI 8: region 8 (pos = 3-1, cor = 3, quantidade = 1)
+region 5 (pos = 3-1, cor = 2, quantidade = 2)
+region 4 (pos = 2-0, cor = 2, quantidade = 1)
+------------------------
+PAI 9: region 9 (pos = 1-4, cor = 1, quantidade = 3)
+region 7 (pos = 1-4, cor = 2, quantidade = 3)
+region 6 (pos = 2-3, cor = 3, quantidade = 1)
+region 5 (pos = 3-2, cor = 2, quantidade = 2)
+------------------------
+PAI 10: region 10 (pos = 1-4, cor = 3, quantidade = 1)
+region 7 (pos = 1-4, cor = 2, quantidade = 3)
+------------------------
+#################################################
+-> iniciando com a regiao 0
+ --> verificando cor da regiao 1
+-> iniciando com a regiao 1
+ --> verificando cor da regiao 4
+     --- nao tem cor
+ --> verificando cor da regiao 0
+     --- nao tem cor
+NULL
+        --> vendo filhos da regiao 1
+        --> regiao 4 diferente
+free na regiao 1, q eh 1
+aux vai ser 2
+ --> verificando cor da regiao 2
+     --- nao tem cor
+ --> verificando cor da regiao 3
+-> iniciando com a regiao 3
+ --> verificando cor da regiao 5
+     --- nao tem cor
+ --> verificando cor da regiao 6
+     --- nao tem cor
+ --> verificando cor da regiao 2
+     --- nao tem cor
+ --> verificando cor da regiao 7
+     --- nao tem cor
+ --> verificando cor da regiao 0
+     --- nao tem cor
+NULL
+        --> vendo filhos da regiao 3
+        --> regiao 5 diferente
+        --> regiao 6 diferente
+        --> regiao 2 diferente
+        --> regiao 7 diferente
+free na regiao 3, q eh 3
+aux vai ser 4
+ --> verificando cor da regiao 4
+     --- nao tem cor
+ --> verificando cor da regiao 5
+     --- nao tem cor
+ --> verificando cor da regiao 6
+     --- nao tem cor
+ --> verificando cor da regiao 7
+     --- nao tem cor
+NULL
+---- lista adj----
+PAI 0: region 0 (pos = 1-0, cor = 1, quantidade = 8)
+region 4 (pos = 3-0, cor = 2, quantidade = 1)
+region 5 (pos = 3-3, cor = 2, quantidade = 2)
+region 6 (pos = 3-3, cor = 3, quantidade = 1)
+region 7 (pos = 2-3, cor = 2, quantidade = 3)
+------------------------
+PAI 2: region 2 (pos = 3-1, cor = 3, quantidade = 1)
+region 5 (pos = 3-1, cor = 2, quantidade = 2)
+region 3 (pos = 2-2, cor = 1, quantidade = 3)
+region 0 (pos = 1-1, cor = 2, quantidade = 3)
+region 4 (pos = 2-0, cor = 2, quantidade = 1)
+------------------------
+PAI 4: region 4 (pos = 3-0, cor = 2, quantidade = 1)
+region 8 (pos = 3-0, cor = 3, quantidade = 1)
+region 2 (pos = 2-1, cor = 3, quantidade = 1)
+region 1 (pos = 1-0, cor = 1, quantidade = 1)
+------------------------
+PAI 5: region 5 (pos = 3-3, cor = 2, quantidade = 2)
+region 9 (pos = 3-3, cor = 1, quantidade = 3)
+region 3 (pos = 2-2, cor = 1, quantidade = 3)
+region 2 (pos = 2-1, cor = 3, quantidade = 1)
+region 8 (pos = 3-0, cor = 3, quantidade = 1)
+------------------------
+PAI 6: region 6 (pos = 3-3, cor = 3, quantidade = 1)
+region 9 (pos = 3-3, cor = 1, quantidade = 3)
+region 7 (pos = 1-3, cor = 2, quantidade = 3)
+region 3 (pos = 2-2, cor = 1, quantidade = 3)
+------------------------
+PAI 7: region 7 (pos = 2-3, cor = 2, quantidade = 3)
+region 6 (pos = 2-3, cor = 3, quantidade = 1)
+region 9 (pos = 2-4, cor = 1, quantidade = 3)
+region 10 (pos = 0-4, cor = 3, quantidade = 1)
+region 3 (pos = 0-2, cor = 1, quantidade = 3)
+------------------------
+PAI 8: region 8 (pos = 3-1, cor = 3, quantidade = 1)
+region 5 (pos = 3-1, cor = 2, quantidade = 2)
+region 4 (pos = 2-0, cor = 2, quantidade = 1)
+------------------------
+PAI 9: region 9 (pos = 1-4, cor = 1, quantidade = 3)
+region 7 (pos = 1-4, cor = 2, quantidade = 3)
+region 6 (pos = 2-3, cor = 3, quantidade = 1)
+region 5 (pos = 3-2, cor = 2, quantidade = 2)
+------------------------
+PAI 10: region 10 (pos = 1-4, cor = 3, quantidade = 1)
+region 7 (pos = 1-4, cor = 2, quantidade = 3)
+------------------------
+#################################################
