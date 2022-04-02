@@ -16,6 +16,17 @@ int module(int a)
     return a;
 }
 
+Index **allocate_matrix(int rows, int cols)
+{
+    Index **matrix = (Index **)malloc(rows * sizeof(Index *));
+    for (int i = 0; i < rows; ++i)
+    {
+        matrix[i] = (Index *)malloc(cols * sizeof(Index));
+    }
+
+    return matrix;
+}
+
 Map *create_map(FILE *file)
 {
     Map *map = (Map *)malloc(sizeof(Map));

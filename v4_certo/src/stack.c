@@ -3,17 +3,6 @@
 #include "../include/stack.h"
 #include "../include/map.h"
 
-Index **allocate_matrix(int rows, int cols)
-{
-    Index **matrix = (Index **)malloc(rows * sizeof(Index *));
-    for (int i = 0; i < rows; ++i)
-    {
-        matrix[i] = (Index *)malloc(cols * sizeof(Index));
-    }
-
-    return matrix;
-}
-
 State *create_state(int region, int color)
 {
     State *s = (State *)malloc(sizeof(State));

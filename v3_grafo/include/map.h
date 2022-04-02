@@ -1,8 +1,22 @@
 #ifndef _MAIN_H
 #define _MAIN_H
 
-#include "stack.h"
 #include "graph.h"
+
+typedef struct Index
+{
+    int region;
+    int color;
+} Index;
+
+typedef struct State
+{
+    int region;
+    int color;
+    int distance;
+    struct State *prev;
+    struct State *next;
+} State;
 
 typedef struct Map
 {
@@ -13,6 +27,7 @@ typedef struct Map
 } Map;
 
 int module(int a);
+Index **allocate_matrix(int rows, int cols);
 Map *create_map(FILE *file);
 void reset_map(Map **m);
 void show_matrix(Index **matrix, int rows, int cols);

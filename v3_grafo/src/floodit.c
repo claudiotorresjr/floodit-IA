@@ -5,7 +5,6 @@
 
 #include "../include/map.h"
 #include "../include/graph.h"
-#include "../include/stack.h"
 #include "../include/solver.h"
 #include "../include/doubleQueue.h"
 

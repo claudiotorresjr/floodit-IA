@@ -16,10 +16,26 @@ int module(int a)
     return a;
 }
 
+Index **allocate_matrix(int rows, int cols)
+{
+    Index **matrix = (Index **)malloc(rows * sizeof(Index *));
+    for (int i = 0; i < rows; ++i)
+    {
+        matrix[i] = (Index *)malloc(cols * sizeof(Index));
+    }
+
+    return matrix;
+}
+
 Map *create_map(FILE *file)
 {
     Map *map = (Map *)malloc(sizeof(Map));
-    fscanf(file, "%d %d %d\n", &map->rows, &map->cols, &map->n_colors);
+
+    if (!fscanf(file, "%d %d %d\n", &map->rows, &map->cols, &map->n_colors))
+    {
+        fprintf(stderr, "Error reading file header.\n");
+        exit(1);
+    }
     map->map = allocate_matrix(map->rows, map->cols);
 
     for (int i = 0; i < map->rows; i++)
@@ -27,7 +43,11 @@ Map *create_map(FILE *file)
         for (int j = 0; j < map->cols; j++)
         {
             map->map[i][j].region = -1;
-            fscanf(file, "%d ", &map->map[i][j].color);
+            if (!fscanf(file, "%d ", &map->map[i][j].color))
+            {
+                fprintf(stderr, "Error reading map colors.\n");
+                exit(1);
+            }
         }
     }
 
@@ -105,8 +125,6 @@ void frontier(Map **m, int l, int c, int atual_color, int region, Graph *g)
         {
             if ((*m)->map[l][c].color > 0)
             {
-                int queue = 0;
-
                 total_regions++;
 
                 int save_region = region;

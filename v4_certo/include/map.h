@@ -13,6 +13,7 @@ typedef struct Map
 } Map;
 
 int module(int a);
+Index **allocate_matrix(int rows, int cols);
 Map *create_map(FILE *file);
 void reset_map(Map **m);
 void show_matrix(Index **matrix, int rows, int cols);

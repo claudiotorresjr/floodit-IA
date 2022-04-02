@@ -87,9 +87,37 @@ int calculate_min_distance(int size, int n_colors, int *colors)
     return color;
 }
 
+int *remaining_nodes_by_color(Graph *g, int n_colors)
+{
+
+    int *colors_remaining = (int *)calloc(n_colors + 1, sizeof(int));
+    for (int i = 0; i < g->num_v; ++i)
+    {
+        if (g->array[i].head)
+        {
+            colors_remaining[g->array[i].head->color]++;
+        }
+    }
+
+    return colors_remaining;
+}
+
+State *create_state(int region, int color)
+{
+    State *s = (State *)malloc(sizeof(State));
+
+    s->region = region;
+    s->distance = 0;
+    s->color = color;
+    s->prev = NULL;
+    s->next = NULL;
+
+    return s;
+}
+
 int solve_floodit(Graph *g, int n_colors)
 {
-    int *colors = (int *)calloc(((n_colors)+1), sizeof(int));
+    int *colors = (int *)calloc(n_colors + 1, sizeof(int));
 
     int optimal_color = 0;
     for (int c = 1; c <= n_colors; ++c)
@@ -138,4 +166,6 @@ int solve_floodit(Graph *g, int n_colors)
     free(colors);
 
     return color;
+
+    return 1;
 }

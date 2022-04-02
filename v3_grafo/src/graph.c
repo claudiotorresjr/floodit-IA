@@ -3,7 +3,6 @@
 #include <time.h>
 
 #include "../include/graph.h"
-#include "../include/stack.h"
 #include "../include/map.h"
 #include "../include/doubleQueue.h"
 
