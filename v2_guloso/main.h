@@ -6,8 +6,22 @@ typedef struct Map
     int **map;
     int rows;
     int cols;
+    int colors;
     int n_colors;
 } Map;
+
+typedef struct Position
+{
+    int l;
+    int c;
+    int v;
+} Position;
+
+typedef struct Frontier
+{
+    int size;
+    Position *pos;
+} Frontier;
 
 typedef struct Solution
 {
@@ -16,8 +30,7 @@ typedef struct Solution
 } Solution;
 
 int **createMatrix(int rows, int cols);
-void show_matrix(int **matrix, int rows, int cols);
-Map *create_map(FILE *file);
-void paintOneColor(int ***m, int rows, int cols, int r, int c, int init_c, int color);
+void showMatrix(int **matrix, int rows, int cols);
+Map *createMap(FILE *file);
 
 #endif

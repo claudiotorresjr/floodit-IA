@@ -5,9 +5,7 @@
 #include "main.h"
 #include "stack.h"
 
-int total;
-
-Map *create_map(FILE *file)
+Map *createMap(FILE *file)
 {
     Map *map = (Map *)malloc(sizeof(Map));
     fscanf(file, "%d %d %d\n", &map->rows, &map->cols, &map->n_colors);
@@ -24,7 +22,7 @@ Map *create_map(FILE *file)
     return map;
 }
 
-void show_matrix(int **matrix, int rows, int cols)
+void showMatrix(int **matrix, int rows, int cols)
 {
     for (int i = 0; i < rows; i++)
     {
@@ -36,7 +34,7 @@ void show_matrix(int **matrix, int rows, int cols)
     }
 }
 
-int is_solved(int **m, int r, int c)
+int isSolved(int **m, int r, int c)
 {
     int first_c = m[0][0];
     for (int i = 0; i < r; ++i)
@@ -95,22 +93,6 @@ int count_color_region(int **m, int rows, int cols)
     return total;
 }
 
-void frontier_calc(int ***m, int rows, int cols, int l, int c, int atual_color)
-{
-    if ((*m)[l][c] == atual_color)
-    {
-        total++;
-        if ( rows - 1 > l )
-            frontier_calc(m, rows, cols, l + 1, c, atual_color);
-        if ( cols - 1 > c )
-            frontier_calc(m, rows, cols, l, c + 1, atual_color);
-        if ( l > 0 )
-            frontier_calc(m, rows, cols, l - 1, c, atual_color);
-        if ( c > 0 )
-            frontier_calc(m, rows, cols, l, c - 1, atual_color);
-    }
-}
-
 void print_solution(Solution *s)
 {
     printf("%d\n", s->steps);
@@ -130,9 +112,9 @@ int main(int argc, char const *argv[])
         exit(1);
     }
 
-    Map *map = create_map(map_file);
+    Map *map = createMap(map_file);
 
-    // show_matrix(map->map, map->rows, map->cols);
+    // showMatrix(map->map, map->rows, map->cols);
 
     Solution *solution = (Solution *)malloc(sizeof(Solution));
     solution->steps = 0;
@@ -155,14 +137,15 @@ int main(int argc, char const *argv[])
         {
             if (i == current_c)
             {
-                // printf("Nao pinte com a cor %paintOneColor
+                // printf("Nao pinte com a cor %d\n", i);
                 continue;
             }
+            frontier[f_pos] = create_state(i);
+
+            // printf("pintando com a cor %d\n", i);
             int **m_aux = copy_matrix(map);
-            total = 0;
             paintOneColor(&m_aux, map->rows, map->cols, 0, 0, m_aux[0][0], i);
-            frontier_calc(&m_aux, map->rows, map->cols, 0, 0, m_aux[0][0]);
-            if (is_solved(m_aux, map->rows, map->cols))
+            if (isSolved(m_aux, map->rows, map->cols))
             {
                 solution->colors[solution->steps++] = i;
                 print_solution(solution);
@@ -170,7 +153,6 @@ int main(int argc, char const *argv[])
                 return 0;
             }
             frontier[f_pos]->distance = count_color_region(m_aux, map->rows, map->cols);
-            // frontier[f_pos]->distance = total;
             
             f_pos++;
         }
