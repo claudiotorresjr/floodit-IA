@@ -1,212 +1,156 @@
 ---- lista adj----
-PAI 0: region 0 (visited = 0, pos = 1-0, cor = 2, quantidade = 3)
-region 1 (visited = 0, pos = 1-0, cor = 1, quantidade = 1)
-region 2 (visited = 0, pos = 2-1, cor = 3, quantidade = 1)
-region 3 (visited = 0, pos = 1-2, cor = 1, quantidade = 3)
+PAI 0: region 0 (pos = 1-0, cor = 2, quantidade = 3)
+region 1 (pos = 1-0, cor = 1, quantidade = 1)
+region 2 (pos = 2-1, cor = 3, quantidade = 1)
+region 3 (pos = 1-2, cor = 1, quantidade = 3)
 ------------------------
-PAI 1: region 1 (visited = 0, pos = 2-0, cor = 1, quantidade = 1)
-region 4 (visited = 0, pos = 2-0, cor = 2, quantidade = 1)
-region 0 (visited = 0, pos = 1-1, cor = 2, quantidade = 3)
+PAI 1: region 1 (pos = 2-0, cor = 1, quantidade = 1)
+region 4 (pos = 2-0, cor = 2, quantidade = 1)
+region 0 (pos = 1-1, cor = 2, quantidade = 3)
 ------------------------
-PAI 2: region 2 (visited = 0, pos = 3-1, cor = 3, quantidade = 1)
-region 5 (visited = 0, pos = 3-1, cor = 2, quantidade = 2)
-region 3 (visited = 0, pos = 2-2, cor = 1, quantidade = 3)
-region 0 (visited = 0, pos = 1-1, cor = 2, quantidade = 3)
-region 4 (visited = 0, pos = 2-0, cor = 2, quantidade = 1)
+PAI 2: region 2 (pos = 3-1, cor = 3, quantidade = 1)
+region 5 (pos = 3-1, cor = 2, quantidade = 2)
+region 3 (pos = 2-2, cor = 1, quantidade = 3)
+region 0 (pos = 1-1, cor = 2, quantidade = 3)
+region 4 (pos = 2-0, cor = 2, quantidade = 1)
 ------------------------
-PAI 3: region 3 (visited = 0, pos = 3-2, cor = 1, quantidade = 3)
-region 5 (visited = 0, pos = 3-2, cor = 2, quantidade = 2)
-region 6 (visited = 0, pos = 2-3, cor = 3, quantidade = 1)
-region 2 (visited = 0, pos = 2-1, cor = 3, quantidade = 1)
-region 7 (visited = 0, pos = 1-3, cor = 2, quantidade = 3)
-region 0 (visited = 0, pos = 0-1, cor = 2, quantidade = 3)
+PAI 3: region 3 (pos = 3-2, cor = 1, quantidade = 3)
+region 5 (pos = 3-2, cor = 2, quantidade = 2)
+region 6 (pos = 2-3, cor = 3, quantidade = 1)
+region 2 (pos = 2-1, cor = 3, quantidade = 1)
+region 7 (pos = 1-3, cor = 2, quantidade = 3)
+region 0 (pos = 0-1, cor = 2, quantidade = 3)
 ------------------------
-PAI 4: region 4 (visited = 0, pos = 3-0, cor = 2, quantidade = 1)
-region 8 (visited = 0, pos = 3-0, cor = 3, quantidade = 1)
-region 2 (visited = 0, pos = 2-1, cor = 3, quantidade = 1)
-region 1 (visited = 0, pos = 1-0, cor = 1, quantidade = 1)
+PAI 4: region 4 (pos = 3-0, cor = 2, quantidade = 1)
+region 8 (pos = 3-0, cor = 3, quantidade = 1)
+region 2 (pos = 2-1, cor = 3, quantidade = 1)
+region 1 (pos = 1-0, cor = 1, quantidade = 1)
 ------------------------
-PAI 5: region 5 (visited = 0, pos = 3-3, cor = 2, quantidade = 2)
-region 9 (visited = 0, pos = 3-3, cor = 1, quantidade = 3)
-region 3 (visited = 0, pos = 2-2, cor = 1, quantidade = 3)
-region 2 (visited = 0, pos = 2-1, cor = 3, quantidade = 1)
-region 8 (visited = 0, pos = 3-0, cor = 3, quantidade = 1)
+PAI 5: region 5 (pos = 3-3, cor = 2, quantidade = 2)
+region 9 (pos = 3-3, cor = 1, quantidade = 3)
+region 3 (pos = 2-2, cor = 1, quantidade = 3)
+region 2 (pos = 2-1, cor = 3, quantidade = 1)
+region 8 (pos = 3-0, cor = 3, quantidade = 1)
 ------------------------
-PAI 6: region 6 (visited = 0, pos = 3-3, cor = 3, quantidade = 1)
-region 9 (visited = 0, pos = 3-3, cor = 1, quantidade = 3)
-region 7 (visited = 0, pos = 1-3, cor = 2, quantidade = 3)
-region 3 (visited = 0, pos = 2-2, cor = 1, quantidade = 3)
+PAI 6: region 6 (pos = 3-3, cor = 3, quantidade = 1)
+region 9 (pos = 3-3, cor = 1, quantidade = 3)
+region 7 (pos = 1-3, cor = 2, quantidade = 3)
+region 3 (pos = 2-2, cor = 1, quantidade = 3)
 ------------------------
-PAI 7: region 7 (visited = 0, pos = 2-3, cor = 2, quantidade = 3)
-region 6 (visited = 0, pos = 2-3, cor = 3, quantidade = 1)
-region 9 (visited = 0, pos = 2-4, cor = 1, quantidade = 3)
-region 10 (visited = 0, pos = 0-4, cor = 3, quantidade = 1)
-region 3 (visited = 0, pos = 0-2, cor = 1, quantidade = 3)
+PAI 7: region 7 (pos = 2-3, cor = 2, quantidade = 3)
+region 6 (pos = 2-3, cor = 3, quantidade = 1)
+region 9 (pos = 2-4, cor = 1, quantidade = 3)
+region 10 (pos = 0-4, cor = 3, quantidade = 1)
+region 3 (pos = 0-2, cor = 1, quantidade = 3)
 ------------------------
-PAI 8: region 8 (visited = 0, pos = 3-1, cor = 3, quantidade = 1)
-region 5 (visited = 0, pos = 3-1, cor = 2, quantidade = 2)
-region 4 (visited = 0, pos = 2-0, cor = 2, quantidade = 1)
+PAI 8: region 8 (pos = 3-1, cor = 3, quantidade = 1)
+region 5 (pos = 3-1, cor = 2, quantidade = 2)
+region 4 (pos = 2-0, cor = 2, quantidade = 1)
 ------------------------
-PAI 9: region 9 (visited = 0, pos = 1-4, cor = 1, quantidade = 3)
-region 7 (visited = 0, pos = 1-4, cor = 2, quantidade = 3)
-region 6 (visited = 0, pos = 2-3, cor = 3, quantidade = 1)
-region 5 (visited = 0, pos = 3-2, cor = 2, quantidade = 2)
+PAI 9: region 9 (pos = 1-4, cor = 1, quantidade = 3)
+region 7 (pos = 1-4, cor = 2, quantidade = 3)
+region 6 (pos = 2-3, cor = 3, quantidade = 1)
+region 5 (pos = 3-2, cor = 2, quantidade = 2)
 ------------------------
-PAI 10: region 10 (visited = 0, pos = 1-4, cor = 3, quantidade = 1)
-region 7 (visited = 0, pos = 1-4, cor = 2, quantidade = 3)
-------------------------
-#################################################
--> iniciando com a regiao 0
- --> verificando cor da regiao 1
-    --> eh igual
--> iniciando com a regiao 1
- --> verificando cor da regiao 4
- --> verificando cor da regiao 0
-  (sai da recursao)
-        --> vendo filhos da regiao 1
-        --> regiao 4 diferente
-Removendo da reg 4 o nodo 1
-(atualiza regiao 0 -- aux == 1)
-free na regiao 1, q eh 1
-AQUI POR FAVOR 0 -- aux == 2)
- --> verificando cor da regiao 2
- --> verificando cor da regiao 3
-    --> eh igual
--> iniciando com a regiao 3
- --> verificando cor da regiao 5
- --> verificando cor da regiao 6
- --> verificando cor da regiao 2
- --> verificando cor da regiao 7
- --> verificando cor da regiao 0
-  (sai da recursao)
-        --> vendo filhos da regiao 3
-        --> regiao 5 diferente
-Removendo da reg 5 o nodo 3
-        --> regiao 6 diferente
-Removendo da reg 6 o nodo 3
-        --> regiao 2 diferente
-Removendo da reg 2 o nodo 3
-        --> regiao 7 diferente
-Removendo da reg 7 o nodo 3
-(atualiza regiao 0 -- aux == 3)
-free na regiao 3, q eh 3
-AQUI POR FAVOR 0 -- aux == 4)
- --> verificando cor da regiao 4
- --> verificando cor da regiao 5
- --> verificando cor da regiao 6
- --> verificando cor da regiao 7
----- lista adj----
-PAI 0: region 0 (visited = 0, pos = 1-0, cor = 1, quantidade = 8)
-region 4 (visited = 0, pos = 3-0, cor = 2, quantidade = 1)
-region 5 (visited = 0, pos = 3-3, cor = 2, quantidade = 2)
-region 6 (visited = 0, pos = 3-3, cor = 3, quantidade = 1)
-region 7 (visited = 0, pos = 2-3, cor = 2, quantidade = 3)
-------------------------
-PAI 2: region 2 (visited = 0, pos = 3-1, cor = 3, quantidade = 1)
-region 5 (visited = 0, pos = 3-1, cor = 2, quantidade = 2)
-region 0 (visited = 0, pos = 1-1, cor = 2, quantidade = 3)
-region 4 (visited = 0, pos = 2-0, cor = 2, quantidade = 1)
-------------------------
-PAI 4: region 4 (visited = 0, pos = 3-0, cor = 2, quantidade = 1)
-region 8 (visited = 0, pos = 3-0, cor = 3, quantidade = 1)
-region 2 (visited = 0, pos = 2-1, cor = 3, quantidade = 1)
-------------------------
-PAI 5: region 5 (visited = 0, pos = 3-3, cor = 2, quantidade = 2)
-region 9 (visited = 0, pos = 3-3, cor = 1, quantidade = 3)
-region 2 (visited = 0, pos = 2-1, cor = 3, quantidade = 1)
-region 8 (visited = 0, pos = 3-0, cor = 3, quantidade = 1)
-------------------------
-PAI 6: region 6 (visited = 0, pos = 3-3, cor = 3, quantidade = 1)
-region 9 (visited = 0, pos = 3-3, cor = 1, quantidade = 3)
-region 7 (visited = 0, pos = 1-3, cor = 2, quantidade = 3)
-------------------------
-PAI 7: region 7 (visited = 0, pos = 2-3, cor = 2, quantidade = 3)
-region 6 (visited = 0, pos = 2-3, cor = 3, quantidade = 1)
-region 9 (visited = 0, pos = 2-4, cor = 1, quantidade = 3)
-region 10 (visited = 0, pos = 0-4, cor = 3, quantidade = 1)
-------------------------
-PAI 8: region 8 (visited = 0, pos = 3-1, cor = 3, quantidade = 1)
-region 5 (visited = 0, pos = 3-1, cor = 2, quantidade = 2)
-region 4 (visited = 0, pos = 2-0, cor = 2, quantidade = 1)
-------------------------
-PAI 9: region 9 (visited = 0, pos = 1-4, cor = 1, quantidade = 3)
-region 7 (visited = 0, pos = 1-4, cor = 2, quantidade = 3)
-region 6 (visited = 0, pos = 2-3, cor = 3, quantidade = 1)
-region 5 (visited = 0, pos = 3-2, cor = 2, quantidade = 2)
-------------------------
-PAI 10: region 10 (visited = 0, pos = 1-4, cor = 3, quantidade = 1)
-region 7 (visited = 0, pos = 1-4, cor = 2, quantidade = 3)
+PAI 10: region 10 (pos = 1-4, cor = 3, quantidade = 1)
+region 7 (pos = 1-4, cor = 2, quantidade = 3)
 ------------------------
 #################################################
--> iniciando com a regiao 0
- --> verificando cor da regiao 4
-    --> eh igual
--> iniciando com a regiao 4
- --> verificando cor da regiao 8
- --> verificando cor da regiao 2
-  (sai da recursao)
-        --> vendo filhos da regiao 4
-        --> regiao 8 diferente
-Removendo da reg 8 o nodo 4
-        --> regiao 2 diferente
-Removendo da reg 2 o nodo 4
-(atualiza regiao 0 -- aux == 4)
-free na regiao 4, q eh 4
-AQUI POR FAVOR 0 -- aux == 5)
- --> verificando cor da regiao 5
-    --> eh igual
--> iniciando com a regiao 5
- --> verificando cor da regiao 9
- --> verificando cor da regiao 2
- --> verificando cor da regiao 8
-  (sai da recursao)
-        --> vendo filhos da regiao 5
-        --> regiao 9 diferente
-Removendo da reg 9 o nodo 5
-(atualiza regiao 0 -- aux == 5)
-free na regiao 5, q eh 5
-AQUI POR FAVOR 0 -- aux == 6)
- --> verificando cor da regiao 6
- --> verificando cor da regiao 7
-    --> eh igual
--> iniciando com a regiao 7
- --> verificando cor da regiao 6
- --> verificando cor da regiao 9
- --> verificando cor da regiao 10
-  (sai da recursao)
-        --> vendo filhos da regiao 7
-        --> regiao 6 diferente
-Removendo da reg 6 o nodo 7
-        --> regiao 10 diferente
-Removendo da reg 10 o nodo 7
-(atualiza regiao 0 -- aux == 7)
-free na regiao 7, q eh 7
-AQUI POR FAVOR 0 -- aux == 8)
- --> verificando cor da regiao 8
- --> verificando cor da regiao 2
- --> verificando cor da regiao 9
- --> verificando cor da regiao 10
 ---- lista adj----
-PAI 0: region 0 (visited = 0, pos = 1-0, cor = 2, quantidade = 15)
-region 8 (visited = 0, pos = 3-1, cor = 3, quantidade = 1)
-region 2 (visited = 0, pos = 3-1, cor = 3, quantidade = 1)
-region 9 (visited = 0, pos = 1-4, cor = 1, quantidade = 3)
-region 10 (visited = 0, pos = 1-4, cor = 3, quantidade = 1)
+PAI 0: region 0 (pos = 1-0, cor = 1, quantidade = 7)
+region 2 (pos = 2-1, cor = 3, quantidade = 1)
+region 4 (pos = 3-0, cor = 2, quantidade = 1)
+region 5 (pos = 3-3, cor = 2, quantidade = 2)
+region 6 (pos = 3-3, cor = 3, quantidade = 1)
+region 7 (pos = 2-3, cor = 2, quantidade = 3)
 ------------------------
-PAI 2: region 2 (visited = 0, pos = 3-1, cor = 3, quantidade = 1)
-region 5 (visited = 0, pos = 3-1, cor = 2, quantidade = 2)
-region 0 (visited = 0, pos = 1-1, cor = 2, quantidade = 3)
+PAI 2: region 2 (pos = 3-1, cor = 3, quantidade = 1)
+region 5 (pos = 3-1, cor = 2, quantidade = 2)
+region 0 (pos = 1-1, cor = 2, quantidade = 3)
+region 4 (pos = 2-0, cor = 2, quantidade = 1)
 ------------------------
-PAI 6: region 6 (visited = 0, pos = 3-3, cor = 3, quantidade = 1)
-region 9 (visited = 0, pos = 3-3, cor = 1, quantidade = 3)
+PAI 4: region 4 (pos = 3-0, cor = 2, quantidade = 1)
+region 8 (pos = 3-0, cor = 3, quantidade = 1)
+region 2 (pos = 2-1, cor = 3, quantidade = 1)
+region 0 (pos = 3-0, cor = 1, quantidade = 4)
 ------------------------
-PAI 8: region 8 (visited = 0, pos = 3-1, cor = 3, quantidade = 1)
-region 5 (visited = 0, pos = 3-1, cor = 2, quantidade = 2)
+PAI 5: region 5 (pos = 3-3, cor = 2, quantidade = 2)
+region 9 (pos = 3-3, cor = 1, quantidade = 3)
+region 2 (pos = 2-1, cor = 3, quantidade = 1)
+region 8 (pos = 3-0, cor = 3, quantidade = 1)
+region 0 (pos = 3-3, cor = 1, quantidade = 7)
 ------------------------
-PAI 9: region 9 (visited = 0, pos = 1-4, cor = 1, quantidade = 3)
-region 7 (visited = 0, pos = 1-4, cor = 2, quantidade = 3)
-region 6 (visited = 0, pos = 2-3, cor = 3, quantidade = 1)
+PAI 6: region 6 (pos = 3-3, cor = 3, quantidade = 1)
+region 9 (pos = 3-3, cor = 1, quantidade = 3)
+region 7 (pos = 1-3, cor = 2, quantidade = 3)
+region 0 (pos = 3-3, cor = 1, quantidade = 7)
 ------------------------
-PAI 10: region 10 (visited = 0, pos = 1-4, cor = 3, quantidade = 1)
+PAI 7: region 7 (pos = 2-3, cor = 2, quantidade = 3)
+region 6 (pos = 2-3, cor = 3, quantidade = 1)
+region 9 (pos = 2-4, cor = 1, quantidade = 3)
+region 10 (pos = 0-4, cor = 3, quantidade = 1)
+region 0 (pos = 2-3, cor = 1, quantidade = 7)
+------------------------
+PAI 8: region 8 (pos = 3-1, cor = 3, quantidade = 1)
+region 5 (pos = 3-1, cor = 2, quantidade = 2)
+region 4 (pos = 2-0, cor = 2, quantidade = 1)
+------------------------
+PAI 9: region 9 (pos = 1-4, cor = 1, quantidade = 3)
+region 7 (pos = 1-4, cor = 2, quantidade = 3)
+region 6 (pos = 2-3, cor = 3, quantidade = 1)
+region 5 (pos = 3-2, cor = 2, quantidade = 2)
+------------------------
+PAI 10: region 10 (pos = 1-4, cor = 3, quantidade = 1)
+region 7 (pos = 1-4, cor = 2, quantidade = 3)
+------------------------
+#################################################
+---- lista adj----
+PAI 0: region 0 (pos = 1-0, cor = 2, quantidade = 13)
+region 2 (pos = 2-1, cor = 3, quantidade = 1)
+region 6 (pos = 3-3, cor = 3, quantidade = 1)
+region 8 (pos = 3-1, cor = 3, quantidade = 1)
+region 9 (pos = 1-4, cor = 1, quantidade = 3)
+region 10 (pos = 1-4, cor = 3, quantidade = 1)
+------------------------
+PAI 2: region 2 (pos = 3-1, cor = 3, quantidade = 1)
+region 0 (pos = 1-1, cor = 2, quantidade = 3)
+------------------------
+PAI 6: region 6 (pos = 3-3, cor = 3, quantidade = 1)
+region 9 (pos = 3-3, cor = 1, quantidade = 3)
+region 0 (pos = 3-3, cor = 1, quantidade = 7)
+------------------------
+PAI 8: region 8 (pos = 3-1, cor = 3, quantidade = 1)
+region 0 (pos = 3-1, cor = 2, quantidade = 8)
+------------------------
+PAI 9: region 9 (pos = 1-4, cor = 1, quantidade = 3)
+region 6 (pos = 2-3, cor = 3, quantidade = 1)
+region 0 (pos = 1-4, cor = 2, quantidade = 10)
+------------------------
+PAI 10: region 10 (pos = 1-4, cor = 3, quantidade = 1)
+region 0 (pos = 1-4, cor = 2, quantidade = 13)
+------------------------
+#################################################
+---- lista adj----
+PAI 0: region 0 (pos = 1-0, cor = 1, quantidade = 13)
+region 2 (pos = 2-1, cor = 3, quantidade = 1)
+region 6 (pos = 3-3, cor = 3, quantidade = 1)
+region 8 (pos = 3-1, cor = 3, quantidade = 1)
+region 10 (pos = 1-4, cor = 3, quantidade = 1)
+------------------------
+PAI 2: region 2 (pos = 3-1, cor = 3, quantidade = 1)
+region 0 (pos = 1-1, cor = 2, quantidade = 3)
+------------------------
+PAI 6: region 6 (pos = 3-3, cor = 3, quantidade = 1)
+region 0 (pos = 3-3, cor = 1, quantidade = 7)
+------------------------
+PAI 8: region 8 (pos = 3-1, cor = 3, quantidade = 1)
+region 0 (pos = 3-1, cor = 2, quantidade = 8)
+------------------------
+PAI 10: region 10 (pos = 1-4, cor = 3, quantidade = 1)
+region 0 (pos = 1-4, cor = 2, quantidade = 13)
+------------------------
+#################################################
+---- lista adj----
+PAI 0: region 0 (pos = 1-0, cor = 3, quantidade = 13)
 ------------------------
 #################################################

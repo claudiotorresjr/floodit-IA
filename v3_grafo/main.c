@@ -81,9 +81,12 @@ int is_solved(Graph *g)
     int color = g->array[0].head->color;
     for (int i = 1; i < g->num_v; ++i)
     {
-        if (g->array[i].head->color != color)
+        if (g->array[i].head)
         {
-            return 0;
+            if (g->array[i].head->color != color)
+            {
+                return 0;
+            }
         }
     }
 
@@ -250,9 +253,12 @@ int no_color_found(Graph *g, int color)
 {
     for (int i = 0; i < g->num_v; ++i)
     {
-        if (g->array[i].head->color == color)
+        if (g->array[i].head)
         {
-            return 0;
+            if (g->array[i].head->color == color)
+            {
+                return 0;
+            }
         }
     }
 
@@ -320,22 +326,22 @@ int main(int argc, char const *argv[])
 
     free_map(map);
 
-    show_graph(g);
-    printf("#################################################\n");
+    // show_graph(g);
+    // printf("#################################################\n");
 
-    paint_graph(&g, g->array[0].head, g->array[0].head->color, 1, 1);
-    merge_nodes(g, 0, g->array[0].head->color);
-    reset_graph(g);
+    // paint_graph(&g, g->array[0].head, g->array[0].head->color, 1, 1);
+    // merge_nodes(g, 0, g->array[0].head->color);
+    // reset_graph(g);
 
-    show_graph(g);
-    printf("#################################################\n");
+    // show_graph(g);
+    // printf("#################################################\n");
 
-    paint_graph(&g, g->array[0].head, g->array[0].head->color, 2, 1);
-    merge_nodes(g, 0, g->array[0].head->color);
-    reset_graph(g);
+    // paint_graph(&g, g->array[0].head, g->array[0].head->color, 2, 1);
+    // merge_nodes(g, 0, g->array[0].head->color);
+    // reset_graph(g);
     
-    show_graph(g);
-    printf("#################################################\n");
+    // show_graph(g);
+    // printf("#################################################\n");
 
     // paint_graph(&g, g->array[0].head, g->array[0].head->color, 1, 1);
     // merge_nodes(g, 0, g->array[0].head->color);
@@ -351,74 +357,77 @@ int main(int argc, char const *argv[])
     // show_graph(g);
     // printf("#################################################\n");
 
-    // while (!is_solved(g))
-    // {
+    while (!is_solved(g))
+    {
     
-    //     int *colors = (int *)calloc(((map->n_colors)+1), sizeof(int));
+        int *colors = (int *)calloc(((map->n_colors)+1), sizeof(int));
 
-    //     int optimal_color = 0;
-    //     for (int c = 1; c <= map->n_colors; ++c)
-    //     {
-    //         if (!color_is_in_region(g, g->array[0].head, g->array[0].head->color, c))
-    //         {
-    //             colors[c] = -1;
-    //             reset_graph(g);
+        int optimal_color = 0;
+        for (int c = 1; c <= map->n_colors; ++c)
+        {
+            if (!color_is_in_region(g, g->array[0].head, g->array[0].head->color, c))
+            {
+                colors[c] = -1;
+                reset_graph(g);
 
-    //             continue;
-    //         }
-    //         // printf("pintando com a cor: %d, o %d (%d)\n", c, g->array[0].head->color, g->array[0].head->first_color);            
-    //         reset_graph(g);
+                continue;
+            }
+            // printf("pintando com a cor: %d, o %d (%d)\n", c, g->array[0].head->color, g->array[0].head->first_color);            
+            reset_graph(g);
 
-    //         paint_graph(&g, g->array[0].head, g->array[0].head->color, c, 0);
+            paint_graph(&g, g->array[0].head, g->array[0].head->color, c, 0);
 
-    //         if(no_color_found(g, c))
-    //         {
-    //             optimal_color = c;
-    //             break;
-    //         }
+            if(no_color_found(g, c))
+            {
+                optimal_color = c;
+                break;
+            }
            
-    //         colors[c] = distance_between_nodes(g, c);
-    //          // printf("cor %d distancia == %d\n", c, colors[c]);
+            colors[c] = distance_between_nodes(g, c);
+            //  printf("cor %d distancia == %d\n", c, colors[c]);
 
-    //         for (int j = 0; j < g->num_v; ++j)
-    //         {
-    //             g->array[j].head->color = g->array[j].head->first_color;
-    //             g->array[j].head->visited = 0;
-    //         }
-    //     }
+            for (int j = 0; j < g->num_v; ++j)
+            {
+                if (g->array[j].head)
+                {
+                    g->array[j].head->color = g->array[j].head->first_color;
+                    g->array[j].head->visited = 0;
+                }
+            }
+        }
 
-    //     int color;
-    //     if (!optimal_color)
-    //     {
-    //         color = calculate_min_distance(999999, map->n_colors, colors);
-    //     }
-    //     else
-    //     {
-    //         color = optimal_color;
-    //         optimal_color = 0;
-    //     }
-    //     // printf(" --> menor distancia para a cor %d (%d)\n", color, colors[color]);
-    //     free(colors);
+        int color;
+        if (!optimal_color)
+        {
+            color = calculate_min_distance(999999, map->n_colors, colors);
+        }
+        else
+        {
+            color = optimal_color;
+            optimal_color = 0;
+        }
+        // printf(" --> menor distancia para a cor %d (%d)\n", color, colors[color]);
+        free(colors);
 
-    //     paint_graph(&g, g->array[0].head, g->array[0].head->color, color, 1);
-    //     reset_graph(g);
+        paint_graph(&g, g->array[0].head, g->array[0].head->color, color, 1);
+        // reset_graph(g);
         
-    //     // merge_nodes(g, 0, g->array[0].head->color);
-    //     // reset_graph(g);
+        merge_nodes(g, 0, g->array[0].head->color);
+        reset_graph(g);
 
-    //     // show_graph(g);
-    //     // printf("#################################################\n");
+        // show_graph(g);
+        // printf("#################################################\n");
 
-    //     solution->colors[solution->steps++] = color;
-    //     // break;
-    // }
+        solution->colors[solution->steps++] = color;
+        // break;
+    }
 
-    // print_solution(solution);
+    print_solution(solution);
 
-    // free_graph(g);
-    // free(solution->colors);
-    // free(solution);
-    // free(map);
+    free_graph(g);
+    free(solution->colors);
+    free(solution);
+    free(map);
 
     return 0;
 }
