@@ -164,6 +164,53 @@ int find_optimal_color(Graph *g, int n_colors)
     int *colors = (int *)calloc(n_colors + 1, sizeof(int));
 
     int optimal_color = 0;
+
+    //first check if a color can be eliminated in one move. If yes, we can use it
+    for (int c = 1; c <= n_colors; ++c)
+    {
+        //dont paint with color that is not in region 0 neighbors
+        if (!color_is_in_region(g, g->array[0].head, g->array[0].head->color, c))
+        {
+            colors[c] = -1;
+            reset_graph(&g);
+
+            continue;
+        }
+            
+        reset_graph(&g);
+
+        //paint with one color
+        paint_graph(&g, g->array[0].head, g->array[0].head->color, c, 0);
+
+        reset_graph(&g);
+        //now, paint with 0 to see if the color c is eliminated
+        paint_graph(&g, g->array[0].head, g->array[0].head->color, 0, 0);
+
+        int *colors_remaining = remaining_nodes_by_color(g, n_colors);
+ 
+        if (colors_remaining[c] == 0)
+        {
+            // printf("eliminated! painting with color: %d\n", c);  
+            optimal_color = c;
+            break;
+        }
+
+        for (int j = 0; j < g->num_v; ++j)
+        {
+            if (g->array[j].head)
+            {
+                g->array[j].head->color = g->array[j].head->first_color;
+            }
+        }
+    }
+
+    if (optimal_color)
+    {
+        return optimal_color;
+    }
+
+    //if the color cant't be eliminated in one move, check all distances and choose
+    //the one that minimize the sum of all distances
     for (int c = 1; c <= n_colors; ++c)
     {
         //dont paint with color that is not in region 0 neighbors
@@ -175,23 +222,27 @@ int find_optimal_color(Graph *g, int n_colors)
             continue;
         }
 
-        // printf("painting with color: %d\n", c, g->array[0].head->color);            
+        // printf("painting with color: %d\n", c);              
         reset_graph(&g);
 
         paint_graph(&g, g->array[0].head, g->array[0].head->color, c, 0);
         
-        //TODO
-        //if a color can be eliminated in one move
-        // from the current position, that move is an optimal move and we can
-        // simply use it
-        // if(no_color_found(g, c))
-        // {
-        //     optimal_color = c;
-        //     break;
-        // }
-        
         colors[c] = distance_between_nodes(g);
-        //  printf("Color %d with distance == %d\n", c, colors[c]);
+        // printf("Color %d with distance == %d\n", c, colors[c]);
+         
+        
+        int *colors_remaining = remaining_nodes_by_color(g, n_colors);
+        int total_regions = 0;
+        for (int i = 1; i < n_colors+1; ++i)
+        {
+            if (colors_remaining[i] > 0)
+            {
+                total_regions += colors_remaining[i];
+            }
+            // printf("(%d: %d) ", i, colors_remaining[i]);
+        }
+        // printf("\n");
+
 
         for (int j = 0; j < g->num_v; ++j)
         {
