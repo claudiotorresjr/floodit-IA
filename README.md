@@ -2,7 +2,7 @@
 
 ## O v2_guloso ta funcionando normal. Nao chega a ser guloso, mas ele pinta com a cor que mais pintou quadrinho
 
-## A versão final é a v3_grafo.
+## A versão final é a v3_grafo. A v4_certo eh so um backupzinho :D
 
 * Como testar:
 
