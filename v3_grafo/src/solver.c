@@ -131,13 +131,13 @@ int calculate_min_distance(int size, int n_colors, int *colors)
 }
 
 /**
- * @brief Calculate how many regions each color has 
+ * @brief Calculate the amount of each color 
  * 
  * @param g The graph
  * @param n_colors The number of different colors in graph 
- * @return int* - array with all colors and its regions amount
+ * @return int* - array with all colors and its amount
  */
-int *remaining_nodes_by_color(Graph *g, int n_colors)
+int *total_colors_painted(Graph *g, int n_colors)
 {
 
     int *colors_remaining = (int *)calloc(n_colors + 1, sizeof(int));
@@ -145,7 +145,7 @@ int *remaining_nodes_by_color(Graph *g, int n_colors)
     {
         if (g->array[i].head)
         {
-            colors_remaining[g->array[i].head->color]++;
+            colors_remaining[g->array[i].head->color] += g->array[g->array[i].head->region].head->size;
         }
     }
 
@@ -157,41 +157,52 @@ int *remaining_nodes_by_color(Graph *g, int n_colors)
  * 
  * @param g The graph
  * @param n_colors The number of different colors in graph 
- * @return int - the best color to paint
+ * @return int - the best color to paint and the cost to it
  */
-int find_optimal_color(Graph *g, int n_colors)
+int *find_optimal_color(Graph *g, int n_colors, int cost)
 {
-    int *colors = (int *)calloc(n_colors + 1, sizeof(int));
-
     int optimal_color = 0;
 
     //first check if a color can be eliminated in one move. If yes, we can use it
+    int colors_painted = 0;
+    //int *last_colors_remaining, *colors_remaining, *future_colors;
     for (int c = 1; c <= n_colors; ++c)
     {
         //dont paint with color that is not in region 0 neighbors
         if (!color_is_in_region(g, g->array[0].head, g->array[0].head->color, c))
         {
-            colors[c] = -1;
             reset_graph(&g);
 
             continue;
         }
-            
+
         reset_graph(&g);
 
+        int *last_colors_remaining = total_colors_painted(g, n_colors);
         //paint with one color
         paint_graph(&g, g->array[0].head, g->array[0].head->color, c, 0);
+
+        int *colors_remaining = total_colors_painted(g, n_colors);
 
         reset_graph(&g);
         //now, paint with 0 to see if the color c is eliminated
         paint_graph(&g, g->array[0].head, g->array[0].head->color, 0, 0);
+        int *future_colors = total_colors_painted(g, n_colors);
 
-        int *colors_remaining = remaining_nodes_by_color(g, n_colors);
+        int total = colors_remaining[c];
+        int atual = last_colors_remaining[c];
+        int future_c = future_colors[c];
  
-        if (colors_remaining[c] == 0)
+        free(last_colors_remaining);
+        free(colors_remaining);
+        free(future_colors);
+
+        if (future_c == 0)
         {
-            // printf("eliminated! painting with color: %d\n", c);  
+            // printf("eliminated! painting with color: %d\n", c); 
+            colors_painted = total - atual;
             optimal_color = c;
+
             break;
         }
 
@@ -206,11 +217,17 @@ int find_optimal_color(Graph *g, int n_colors)
 
     if (optimal_color)
     {
-        return optimal_color;
+        int *result = (int *)malloc(2*sizeof(int));
+        result[0] = optimal_color;
+        result[1] = colors_painted;
+
+        return result;
     }
 
     //if the color cant't be eliminated in one move, check all distances and choose
     //the one that minimize the sum of all distances
+    int *colors = (int *)calloc(n_colors + 1, sizeof(int));
+    colors_painted = 0;
     for (int c = 1; c <= n_colors; ++c)
     {
         //dont paint with color that is not in region 0 neighbors
@@ -225,22 +242,22 @@ int find_optimal_color(Graph *g, int n_colors)
         // printf("painting with color: %d\n", c);              
         reset_graph(&g);
 
+        int *last_colors_remaining = total_colors_painted(g, n_colors);
         paint_graph(&g, g->array[0].head, g->array[0].head->color, c, 0);
         
         colors[c] = distance_between_nodes(g);
         // printf("Color %d with distance == %d\n", c, colors[c]);
          
-        
-        int *colors_remaining = remaining_nodes_by_color(g, n_colors);
-        int total_regions = 0;
-        for (int i = 1; i < n_colors+1; ++i)
-        {
-            if (colors_remaining[i] > 0)
-            {
-                total_regions += colors_remaining[i];
-            }
-            // printf("(%d: %d) ", i, colors_remaining[i]);
-        }
+        int *colors_remaining = total_colors_painted(g, n_colors);
+
+        //calculate the cost to reach the new state
+        colors_painted = colors_remaining[c] - last_colors_remaining[c];
+        colors[c] += colors_painted + cost;
+
+        // for (int i = 1; i < n_colors+1; ++i)
+        // {
+        //     printf("(%d: %d) ", i, colors_remaining[i]);
+        // }
         // printf("\n");
 
 
@@ -252,6 +269,8 @@ int find_optimal_color(Graph *g, int n_colors)
                 g->array[j].head->visited = 0;
             }
         }
+        free(last_colors_remaining);
+        free(colors_remaining);
     }
 
     int color;
@@ -266,7 +285,9 @@ int find_optimal_color(Graph *g, int n_colors)
     // printf(" --> Smaller distance for the color %d (distance == %d)\n", color, colors[color]);
     free(colors);
 
-    return color;
+    int *result = (int *)malloc(2*sizeof(int));
+    result[0] = color;
+    result[1] = colors_painted;
 
-    return 1;
+    return result;
 }

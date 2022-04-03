@@ -28,7 +28,7 @@
 int main(int argc, char const *argv[])
 {
     FILE *map_file = stdin;
-    if (map_file == NULL)
+    if (!map_file)
     {
         fprintf(stderr, "File not found. Finishing program.\n");
         exit(1);
@@ -52,9 +52,18 @@ int main(int argc, char const *argv[])
 
     free_map(map);
 
-    while (!is_solved(g))
+    DoubleQueue *deque = dq_create();
+
+    dq_insert_head(deque, g->array[0].head->region, g->array[0].head->color, 0);
+
+    while (deque->head)
     {
-        int color = find_optimal_color(g, map->n_colors);
+        State *current = dq_remove_head(deque);
+        
+        int *result = find_optimal_color(g, map->n_colors, current->distance);
+
+        int color = result[0];
+        int cost = result[1];
 
         paint_graph(&g, g->array[0].head, g->array[0].head->color, color, 1);
         reset_graph(&g);
@@ -63,11 +72,25 @@ int main(int argc, char const *argv[])
         reset_graph(&g);
 
         solution->colors[solution->steps++] = color;
+
+        free(result);
+        free(current);
+
+        if(is_solved(g))
+        {
+            break;
+        }
+
+        // printf("%d\n", cost);
+
+        dq_insert_head(deque, g->array[0].head->region, g->array[0].head->color, cost);
     }
 
     print_solution(solution);
 
+    fclose(map_file);
     free_graph(g);
+    free(deque);
     free(solution->colors);
     free(solution);
     free(map);
