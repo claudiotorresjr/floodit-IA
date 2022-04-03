@@ -102,20 +102,7 @@ int *remaining_nodes_by_color(Graph *g, int n_colors)
     return colors_remaining;
 }
 
-State *create_state(int region, int color)
-{
-    State *s = (State *)malloc(sizeof(State));
-
-    s->region = region;
-    s->distance = 0;
-    s->color = color;
-    s->prev = NULL;
-    s->next = NULL;
-
-    return s;
-}
-
-int solve_floodit(Graph *g, int n_colors)
+int find_optimal_color(Graph *g, int n_colors)
 {
     int *colors = (int *)calloc(n_colors + 1, sizeof(int));
 
@@ -125,12 +112,12 @@ int solve_floodit(Graph *g, int n_colors)
         if (!color_is_in_region(g, g->array[0].head, g->array[0].head->color, c))
         {
             colors[c] = -1;
-            reset_graph(g);
+            reset_graph(&g);
 
             continue;
         }
         // printf("pintando com a cor: %d, o %d (%d)\n", c, g->array[0].head->color, g->array[0].head->first_color);            
-        reset_graph(g);
+        reset_graph(&g);
 
         paint_graph(&g, g->array[0].head, g->array[0].head->color, c, 0);
 
@@ -140,7 +127,7 @@ int solve_floodit(Graph *g, int n_colors)
             break;
         }
         
-        colors[c] = distance_between_nodes(g, c);
+        colors[c] = distance_between_nodes(g);
         //  printf("cor %d distancia == %d\n", c, colors[c]);
 
         for (int j = 0; j < g->num_v; ++j)

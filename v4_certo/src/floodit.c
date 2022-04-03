@@ -28,11 +28,17 @@ int main(int argc, char const *argv[])
 
     g->array->visiteds++;
 
-    free_map(map);
 
+    StateQueue *queue = (StateQueue *)malloc(sizeof(StateQueue));
+    queue->top = NULL;
+
+    State *new = create_state(map->map[0][0]->region, map->map[0][0]->color);
+    push(queue, new);
+
+    free_map(map);
     while (!is_solved(g))
     {
-        int color = solve_floodit(g, map->n_colors);
+        int color = find_optimal_color(g, map->n_colors);
 
         paint_graph(&g, g->array[0].head, g->array[0].head->color, color, 1);
         // reset_graph(g);

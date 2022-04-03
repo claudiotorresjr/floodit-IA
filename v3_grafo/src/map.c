@@ -1,11 +1,28 @@
+/**
+ * @file map.c
+ * @author GRR20176143 Cláudio Torres Júnior
+ * @author GRR20173546 Lucas José Ribeiro
+ * @brief File with map.h implementation. All functions for file and matrix manipulation is here.
+ * @version 1.0
+ * @date 2022-04-03
+ * 
+ */
+
 #include <stdlib.h>
 
 #include "../include/map.h"
 
+//global vars to control some recursive functions
 int total;
 int atual_region = 0;
 int total_regions = 0;
 
+/**
+ * @brief The module from a
+ * 
+ * @param a The value to get the module
+ * @return int - a module
+ */
 int module(int a)
 {
     if (a < 0)
@@ -16,6 +33,39 @@ int module(int a)
     return a;
 }
 
+/**
+ * @brief Check if map matrix colors is the same
+ * 
+ * @param m The map object
+ * @param rows The map matrix amount of rows
+ * @param cols The map matrix amount of cols
+ * @return int - 1 if is solved or 0 if not
+ */
+int map_is_solved(Index **m, int rows, int cols)
+{
+    int color = m[0][0].color;
+    for (int i = 0; i < rows; ++i)
+    {
+        for (int j = 0; j < cols; ++j)
+        {
+            //return false if some color is not the same of the first color
+            if (m[i][j].color != color)
+            {
+                return 0;
+            }
+        }
+    }
+
+    return 1;
+}
+
+/**
+ * @brief Create a matrix
+ * 
+ * @param rows The map matrix amount of rows
+ * @param cols The map matrix amount of cols
+ * @return Index** - A matrix
+ */
 Index **allocate_matrix(int rows, int cols)
 {
     Index **matrix = (Index **)malloc(rows * sizeof(Index *));
@@ -27,6 +77,12 @@ Index **allocate_matrix(int rows, int cols)
     return matrix;
 }
 
+/**
+ * @brief Create a map object
+ * 
+ * @param file The file with map information
+ * @return Map* 
+ */
 Map *create_map(FILE *file)
 {
     Map *map = (Map *)malloc(sizeof(Map));
@@ -54,6 +110,11 @@ Map *create_map(FILE *file)
     return map;
 }
 
+/**
+ * @brief Reset all map values to its original value
+ * 
+ * @param m The map object
+ */
 void reset_map(Map **m)
 {
     for (int i = 0; i < (*m)->rows; ++i)
@@ -68,6 +129,13 @@ void reset_map(Map **m)
     }
 }
 
+/**
+ * @brief Show all matrix colors
+ * 
+ * @param matrix The matrix
+ * @param rows The map matrix amount of rows
+ * @param cols The map matrix amount of cols
+ */
 void show_matrix(Index **matrix, int rows, int cols)
 {
     for (int i = 0; i < rows; i++)
@@ -80,6 +148,11 @@ void show_matrix(Index **matrix, int rows, int cols)
     }
 }
 
+/**
+ * @brief Free the map matrix
+ * 
+ * @param m map object
+ */
 void free_map(Map *m)
 {
     for(int i = 0; i < m->rows; ++i)
@@ -87,51 +160,67 @@ void free_map(Map *m)
         free(m->map[i]);
     }
     free(m->map);
-    // free(m);
 }
 
-void frontier(Map **m, int l, int c, int atual_color, int region, Graph *g)
+/**
+ * @brief Find the frontier from some region with some color
+ * 
+ * @param m The map object
+ * @param l The region row
+ * @param c The region col
+ * @param atual_color The region color
+ * @param region The region value
+ * @param g The graph
+ */
+void frontier(Map **m, int r, int c, int atual_color, int region, Graph *g)
 {
-    if ((*m)->map[l][c].color == atual_color)
+    //if we find some position with color as atual_color, this is inside a region
+    if ((*m)->map[r][c].color == atual_color)
     {
         total++;
 
-        (*m)->map[l][c].color = -(*m)->map[l][c].color;
-        if ((*m)->map[l][c].region == -1)
+        //change region color to its negative form to we know that we visited it
+        (*m)->map[r][c].color = -(*m)->map[r][c].color;
+        //if the position element region is -1, we not visited it yet, so this element region will be region
+        if ((*m)->map[r][c].region == -1)
         {
-            (*m)->map[l][c].region = region;
+            (*m)->map[r][c].region = region;
         }
-    
-        if ((*m)->rows - 1 > l)
-            {
-                frontier(m, l + 1, c, atual_color, region, g);
-            }
-        if ((*m)->cols - 1 > c)
+
+        //recursively find all others regions
+        if ((*m)->rows > r + 1)
         {
-            frontier(m, l, c + 1, atual_color, region, g);
+            frontier(m, r + 1, c, atual_color, region, g);
         }
-        if (l > 0)
+        if ((*m)->cols > c + 1)
         {
-            frontier(m, l - 1, c, atual_color, region, g);
+            frontier(m, r, c + 1, atual_color, region, g);
+        }
+        if (r > 0)
+        {
+            frontier(m, r - 1, c, atual_color, region, g);
         }
         if (c > 0)
         {
-            frontier(m, l, c - 1, atual_color, region, g);
+            frontier(m, r, c - 1, atual_color, region, g);
         }
     }
-    else if ((*m)->map[l][c].color != -atual_color)
+    //if the color is not the atual color and not equal its negative, we found another region
+    else if ((*m)->map[r][c].color != -atual_color)
     {
+        //if the graph parameter was passed, is time to add this new region as a new graph vertice,
+        //and add it to the adjacency list of the first region that called this function (and vice versa)
         if (g)
         {
-            if ((*m)->map[l][c].color > 0)
+            if ((*m)->map[r][c].color > 0)
             {
                 total_regions++;
 
                 int save_region = region;
 
-                if ((*m)->map[l][c].region > -1)
+                if ((*m)->map[r][c].region > -1)
                 {
-                    region = (*m)->map[l][c].region;
+                    region = (*m)->map[r][c].region;
                 }
                 else
                 {
@@ -142,20 +231,20 @@ void frontier(Map **m, int l, int c, int atual_color, int region, Graph *g)
                 int save_total = total;
                 total = 0;
                 // printf("achando a fronteira de %d-%d, regiao: %d\n", l, c, region);
-                frontier(m, l, c, (*m)->map[l][c].color, region, NULL);
+                frontier(m, r, c, (*m)->map[r][c].color, region, NULL);
 
                 int pos[2];
-                pos[0] = l;
+                pos[0] = r;
                 pos[1] = c;
 
                 // printf("Esse aqui vai ser o indice: %d\n", save_region);
                 add_edge(
-                    g,
+                    &g,
                     save_region,
                     module(atual_color),
                     save_total,
                     region,
-                    module((*m)->map[l][c].color),
+                    module((*m)->map[r][c].color),
                     total,
                     pos
                 );
@@ -181,7 +270,6 @@ Graph *map_to_graph( Map *map)
 
     for (int i = 0; i < g->num_v; ++i)
     {
-        // start = clock();
         Vertice *aux = g->array[i].head->next;
         // printf("indice da lista: %d\n", i);
         while(aux != NULL)
@@ -197,15 +285,12 @@ Graph *map_to_graph( Map *map)
 
             aux = aux->next;
         }
-        // end = clock();
-        // cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
-        // printf("fun() took %f seconds to execute \n", cpu_time_used);
     }
     // show_graph(g);
     // printf("------------------\n");
     // show_matrix(map->map, map->rows, map->cols);
     // printf("------------------\n");
-    // printf("%d\n", g->num_v);
+    //printf("%d\n", g->num_v);
 
     return g;
 }

@@ -87,7 +87,7 @@ int calculate_min_distance(int size, int n_colors, int *colors)
     return color;
 }
 
-int solve_floodit(Graph *g, int n_colors)
+int find_optimal_color(Graph *g, int n_colors)
 {
     int *colors = (int *)calloc(((n_colors)+1), sizeof(int));
 

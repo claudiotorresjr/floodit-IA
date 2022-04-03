@@ -4,8 +4,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "map.h"
 #include "solver.h"
+
+typedef struct State
+{
+    int region;
+    int color;
+    int distance;
+    struct State *prev;
+    struct State *next;
+} State;
 
 typedef struct DoubleQueue
 {
@@ -14,6 +22,7 @@ typedef struct DoubleQueue
     struct State *tail;
 } DoubleQueue;
 
+State *create_state(int region, int color);
 DoubleQueue *dq_create();
 void dq_show_list(DoubleQueue *queue);
 int dq_empty(DoubleQueue *queue);

@@ -2,7 +2,7 @@
 
 ## O v2_guloso ta funcionando normal. Nao chega a ser guloso, mas ele pinta com a cor que mais pintou quadrinho
 
-## A versão final é a v4_certo.
+## A versão final é a v3_grafo.
 
 * Como testar:
 
@@ -10,7 +10,7 @@
 
         ```./geramapa <numero_de_linhas> <numero_de_colunas> <numero_de_cores> [<semente_aleatoria>] > mapa.txt```
 
-    2. No diretório v4_certo, basta executar ```make```
+    2. No diretório v3_grafo, basta executar ```make```
 
     3. Executar o main
 

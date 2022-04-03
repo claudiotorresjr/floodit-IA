@@ -16,7 +16,6 @@ int color_is_in_region(Graph *g, Vertice *v, int base_color, int color);
 int no_color_found(Graph *g, int color);
 int calculate_min_distance(int size, int n_colors, int *colors);
 int *remaining_nodes_by_color(Graph *g, int n_colors);
-State *create_state(int region, int color);
-int solve_floodit(Graph *g, int n_colors);
+int find_optimal_color(Graph *g, int n_colors);
 
 #endif
