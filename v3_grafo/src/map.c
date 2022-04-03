@@ -218,10 +218,12 @@ void frontier(Map **m, int r, int c, int atual_color, int region, Graph *g)
 
                 int save_region = region;
 
+                //if this position is in a region yet, dont change it
                 if ((*m)->map[r][c].region > -1)
                 {
                     region = (*m)->map[r][c].region;
                 }
+                //if not, update it
                 else
                 {
                     atual_region += 1;
@@ -230,14 +232,13 @@ void frontier(Map **m, int r, int c, int atual_color, int region, Graph *g)
 
                 int save_total = total;
                 total = 0;
-                // printf("achando a fronteira de %d-%d, regiao: %d\n", l, c, region);
+                
                 frontier(m, r, c, (*m)->map[r][c].color, region, NULL);
 
                 int pos[2];
                 pos[0] = r;
                 pos[1] = c;
 
-                // printf("Esse aqui vai ser o indice: %d\n", save_region);
                 add_edge(
                     &g,
                     save_region,
@@ -256,6 +257,12 @@ void frontier(Map **m, int r, int c, int atual_color, int region, Graph *g)
     }
 }
 
+/**
+ * @brief Transform a 2D matrix to a graph
+ * 
+ * @param map The map object
+ * @return Graph* 
+ */
 Graph *map_to_graph( Map *map)
 {
     Graph *g = create_graph(map->rows*map->cols);
@@ -271,11 +278,8 @@ Graph *map_to_graph( Map *map)
     for (int i = 0; i < g->num_v; ++i)
     {
         Vertice *aux = g->array[i].head->next;
-        // printf("indice da lista: %d\n", i);
         while(aux != NULL)
         {
-            // printf("procurando regiao %d(%d, %d)\n", aux->region, aux->pos[0], aux->pos[1]);
-            // printf("posicao sendo analizada: (%d, %d)\n", aux->pos[0], aux->pos[1]);
             total = 0;
             frontier(&map, aux->pos[0], aux->pos[1], aux->color, aux->region, g);
             reset_map(&map);

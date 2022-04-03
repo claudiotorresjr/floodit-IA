@@ -1,20 +1,38 @@
+/**
+ * @file map.h
+ * @author GRR20176143 Cláudio Torres Júnior
+ * @author GRR20173546 Lucas José Ribeiro
+ * @brief All structures and functions used in map.c
+ * @version 1.0
+ * @date 2022-04-03
+ * 
+ */
+
 #ifndef _MAIN_H
 #define _MAIN_H
 
 #include "graph.h"
 
+/**
+ * @brief Struct that represents an index  in matrix(position)
+ * 
+ */
 typedef struct Index
 {
-    int region;
-    int color;
+    int region; //index region value
+    int color; //index color
 } Index;
 
+/**
+ * @brief Struct that represents a map information
+ * 
+ */
 typedef struct Map
 {
-    Index **map;
-    int rows;
-    int cols;
-    int n_colors;
+    Index **map; //array of type index (represents the color matrix)
+    int rows; //amount of rows
+    int cols; //amount of cols
+    int n_colors; //amount of different colors
 } Map;
 
 int module(int a);
